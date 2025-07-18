@@ -31,3 +31,9 @@
 ### 📌 Resultados
 - Componentes `movie-card` e `movie-list` criados e com implementação inicial.
 - Tela de listagem de filmes em desenvolvimento.
+
+
+#### Equipe
+- Dimerson Coelho
+- Nelson Thiago
+- Sabrina Frazão
