@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MovieListComponent } from './movies/movie-list/movie-list.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MovieListComponent],
+  standalone: true,
+  imports: [RouterOutlet], // APENAS RouterOutlet deve estar aqui
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  protected title = 'Pop&Corn';
+  title = 'pop_corn';
 }
