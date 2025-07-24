@@ -7,36 +7,43 @@ import { Observable, of, tap } from 'rxjs';
 
 @Injectable()
 export class MovieService extends AbstractMovieService {
+    override overrideMovies(movies: Movie[]): void {
+      throw new Error('Method not implemented.');
+    }
     // Sinal privado que armazena o estado
     private _movies = signal<Movie[]>([]);
     // Sinal público e somente leitura, derivado do privado
     override movies: Signal<Movie[]> = computed(() => this._movies());
 
-    private apiUrl = 'http://api.po&corn.com/movies'; // Exemplo de API só pra não dar erro
+    private apiUrl = 'http://api.po&corn.com/movies';
 
     constructor(private http: HttpClient) {
         super();
-        this.refresh(); // Carrega os dados assim que o serviço é criado
+        this.refresh();
     }
 
     override refresh(): void {
         this.http.get<Movie[]>(this.apiUrl)
-            .pipe(tap(apiMovies => this._movies.set(apiMovies))) // Atualiza o sinal privado
+            .pipe(tap(apiMovies => this._movies.set(apiMovies)))
             .subscribe();
     }
 
     override add(movie: Omit<Movie, 'id'>): Observable<OperationResult> {
-        // Lógica para adicionar via API
+
         return of({ success: true });
     }
 
     override remove(id: number): Observable<OperationResult> {
-        // Lógica para remover via API
+
         return of({ success: true });
     }
 
     override update(movie: Movie): Observable<OperationResult> {
-        // Lógica para atualizar via API
+
         return of({ success: true });
+    }
+
+    override search(query: any): Observable<OperationResult> {
+        return of()
     }
 }

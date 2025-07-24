@@ -1,42 +1,19 @@
 .movie-list-container {
-  padding: 2rem;
-  background-color: #f5f5f5;
-  font-family: Arial, sans-serif;
+  background-color: #1c1b22;
+  color: #ffffff;
+  padding: 20px;
+  min-height: 100vh;
 }
 
-.search-bar {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 2rem;
 
-  input {
-    width: 100%;
-    padding: 0.8rem 2.5rem 0.8rem 1rem;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-  }
 
-  .search-icon {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    font-size: 1.2rem;
-  }
+.movie-section h2 {
+  margin-bottom: 1rem;
 }
 
-.movie-section {
-  h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-  }
-
-  .movie-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
+.movie-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
 }
+

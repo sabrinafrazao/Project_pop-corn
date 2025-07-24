@@ -1,0 +1,22 @@
+<div class="search-bar-div">
+  <input class="search-bar"
+         type="text"
+         [(ngModel)]="searchQuery"
+         (ngModelChange)="onSearchChange($event)"
+         placeholder="Buscar Filme...">
+
+  @if (searchQuery) {
+    <div class="search-modal">
+      Resultados para "{{ searchQuery }}"
+      <ul>
+        @for (movie of searchResults(); track movie.id) {
+          <li>
+            <strong>{{ movie.title }}</strong> 
+          </li>
+        } @empty {
+          <li>Nenhum filme encontrado.</li>
+        }
+      </ul>
+    </div>
+  }
+</div>
