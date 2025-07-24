@@ -1,0 +1,9 @@
+.main-layout {
+    display: flex;
+}
+
+.content {
+    flex-grow: 1; // Faz a área de conteúdo ocupar o resto do espaço
+    height: 100vh;
+    overflow-y: auto; // Adiciona scroll apenas à área de conteúdo
+}

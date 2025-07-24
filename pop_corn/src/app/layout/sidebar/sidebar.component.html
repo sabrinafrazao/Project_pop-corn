@@ -1,0 +1,46 @@
+<nav class="sidebar">
+  
+  <div class="sidebar-header">
+    <a href="#" class="logo">Pop&Corn</a>
+    <button class="toggle-button" (click)="toggleSidebar()">
+      <span class="material-icons">
+        {{ isCollapsed() ? 'menu' : 'menu_open' }}
+      </span>
+    </button>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-avatar"></div>
+    <div class="profile-info">
+      <span class="profile-name">Sabrina Frazão</span>
+      <a href="#" class="profile-link">Ver perfil</a>
+    </div>
+  </div>
+
+  <ul class="nav-links">
+    <li>
+      <a href="#" class="nav-link">
+        <span class="material-icons">person_outline</span>
+        <span>Perfil</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" class="nav-link active">
+        <span class="material-icons">theaters</span>
+        <span>Filmes</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" class="nav-link">
+        <span class="material-icons">movie</span>
+        <span>Cinemas</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" class="nav-link">
+        <span class="material-icons">payment</span>
+        <span>Dados de Pagamento</span>
+      </a>
+    </li>
+  </ul>
+</nav>

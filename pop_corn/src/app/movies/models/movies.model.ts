@@ -6,4 +6,5 @@ export interface Movie {
   duration: string;
   rating: number;
   votes: number;
+  synopsis: string;
 }

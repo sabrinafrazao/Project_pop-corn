@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { MovieCardComponent } from '../movie-card/movie-card.component';
 import { CommonModule } from '@angular/common';
-import { Movie } from '../movies.model';
+import { Component, OnInit, Signal } from '@angular/core';
+import { Movie } from '../models/movies.model';
+import { MovieCardComponent } from '../movie-card/movie-card.component';
+import { AbstractMovieService } from '../service/abstract-movie.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -12,48 +13,18 @@ import { Movie } from '../movies.model';
 })
 
 
-export class MovieListComponent {
+export class MovieListComponent implements OnInit {
+  // pegamos a referência do Signal do serviço
+  movies: Signal<Movie[]>;
 
-  movies: Movie[] = [
-  {
-    id: 1,
-    title: 'John Wick 4',
-    image: 'assets/images/johnWick.png',
-    genre: 'Ação, Suspense, Drama',
-    duration: '2h49min',
-    rating: 4.7,
-    votes: 45922
-  },
-  {
-    id: 2,
-    title: 'Vingadores: Ultimato',
-    image: 'assets/images/avengers.png',
-    genre: 'Ação, Ficção, Super-herói',
-    duration: '3h01min',
-    rating: 4.8,
-    votes: 125394
-  },
+  constructor(private movieService: AbstractMovieService) {
+    this.movies = this.movieService.movies;
+  }
 
-  {
-    id: 3,
-    title: 'Vingadores: Ultimato',
-    image: 'assets/images/avengers.png',
-    genre: 'Ação, Ficção, Super-herói',
-    duration: '3h01min',
-    rating: 4.8,
-    votes: 125394
-  },
-
-  {
-    id: 4,
-    title: 'Vingadores: Ultimato',
-    image: 'assets/images/avengers.png',
-    genre: 'Ação, Ficção, Super-herói',
-    duration: '3h01min',
-    rating: 4.8,
-    votes: 125394
-  },
-];
-
-
+  ngOnInit(): void {
+    // pede uma atualização inicial
+    this.movieService.refresh();
+  }
 }
+
+
