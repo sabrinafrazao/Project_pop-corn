@@ -5,6 +5,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { MovieProvider } from './movies/service/movie.provider.service';
+import { CinemaProvider } from './cinemas/service/cinema.provider.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,6 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(),
-    MovieProvider // A linha mais importante que resolve o erro!
+    MovieProvider,
+    CinemaProvider
   ]
 };
