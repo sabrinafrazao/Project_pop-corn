@@ -26,17 +26,14 @@ export class MovieService extends AbstractMovieService {
     }
 
     override add(movie: Omit<Movie, 'id'>): Observable<OperationResult> {
-        // Lógica para adicionar via API
         return of({ success: true });
     }
 
     override remove(id: number): Observable<OperationResult> {
-        // Lógica para remover via API
         return of({ success: true });
     }
 
     override update(movie: Movie): Observable<OperationResult> {
-        // Lógica para atualizar via API
         return of({ success: true });
     }
 }

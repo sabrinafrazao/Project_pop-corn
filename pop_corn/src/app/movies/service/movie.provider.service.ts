@@ -5,6 +5,6 @@ import { MockMovieService } from "./mock-movie.service";
 import { MovieService } from "./movie.service";
 
 export const MovieProvider: Provider = {
-  provide: AbstractMovieService,
-  useClass: environment.useMockService ? MockMovieService : MovieService
+    provide: AbstractMovieService,
+    useClass: environment.useMockService ? MockMovieService : MovieService
 };
