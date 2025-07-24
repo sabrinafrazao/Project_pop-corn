@@ -1,0 +1,58 @@
+<div class="booking-container">
+    <div class="order-panel">
+        <h2>Selecione seus Ingressos</h2>
+
+        <div class="ticket-list">
+        <div class="ticket-item" *ngFor="let item of order()">
+            <div class="ticket-info">
+            <span class="ticket-name">{{ item.ticketType.name }}</span>
+            <span class="ticket-price">{{ item.ticketType.price | currency:'BRL' }}</span>
+            </div>
+            <div class="quantity-selector">
+            <button (click)="decrement(item.ticketType.id)" [disabled]="item.quantity === 0">-</button>
+            <input type="text" [value]="item.quantity" readonly>
+            <button (click)="increment(item.ticketType.id)">+</button>
+            </div>
+        </div>
+        </div>
+
+        <div class="order-summary">
+        <div class="summary-item">
+            <span>Total de Ingressos</span>
+            <span>{{ totalTickets() }}</span>
+        </div>
+        <div class="summary-item total">
+            <span>Valor Total</span>
+            <span>{{ totalPrice() | currency:'BRL' }}</span>
+        </div>
+        </div>
+
+        <button class="continue-button" [disabled]="totalTickets() === 0">
+        Selecionar Lugares
+        </button>
+    </div>
+
+    <div class="seat-map-panel">
+    <div class="screen-representation">TELA</div>
+
+    <ng-container *ngIf="session()?.seatMap as seatMap">
+        <div class="seat-map" *ngIf="totalTickets() > 0; else noTicketsSelected">
+        <div class="seat-row" *ngFor="let row of seatMap">
+            <button class="seat" 
+                    *ngFor="let seat of row" 
+                    [ngClass]="seat.status"
+                    [disabled]="seat.status === 'occupied' || (seat.status === 'available' && selectionLimitReached())"
+                    (click)="toggleSeat(seat)">
+            {{ seat.id }}
+            </button>
+        </div>
+        </div>
+    </ng-container>
+    
+    <ng-template #noTicketsSelected>
+        <div class="seat-map-placeholder">
+        <p>Selecione a quantidade de ingressos para liberar o mapa de lugares.</p>
+        </div>
+    </ng-template>
+    </div>
+</div>
