@@ -7,4 +7,5 @@ export interface Movie {
   rating: number;
   votes: number;
   synopsis: string;
+  ageRating?: string;
 }

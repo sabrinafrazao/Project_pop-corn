@@ -7,7 +7,10 @@ import { Observable, of, tap } from 'rxjs';
 
 @Injectable()
 export class MovieService extends AbstractMovieService {
-    // Sinal privado que armazena o estado
+    override overrideMovies(movies: Movie[]): void {
+      throw new Error('Method not implemented.');
+    }
+        // Sinal privado que armazena o estado
     private _movies = signal<Movie[]>([]);
     // Sinal público e somente leitura, derivado do privado
     override movies: Signal<Movie[]> = computed(() => this._movies());
@@ -35,5 +38,8 @@ export class MovieService extends AbstractMovieService {
 
     override update(movie: Movie): Observable<OperationResult> {
         return of({ success: true });
+    }
+    override search(query: any): Observable<OperationResult> {
+        return of()
     }
 }

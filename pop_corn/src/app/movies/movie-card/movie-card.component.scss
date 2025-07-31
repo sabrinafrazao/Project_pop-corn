@@ -1,37 +1,54 @@
-a {
-  text-decoration: none; // Remove o sublinhado
-  }
+:host {
+  display: block;
+}
+
+:host a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .movie-card {
-
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  width: 200px;
-  text-align: center;
+  background-color: #2b2a33;
+  border-radius: 8px;
   padding: 1rem;
+  color: #ffffff;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
 
-  img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
+}
 
-  h3 {
+.movie-card:hover {
+  transform: scale(1.03);
+}
 
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #1a202c;
-    margin-top: 0.75rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-    text-align: center;
-  }
+.movie-card img {
+  border-radius: 6px;
+  width: 100%;
+  height: auto;
+}
 
-  p {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin: 0.25rem 0;
-    text-align: center;
-  }
+.movie-card h3 {
+  margin: 0.5rem 0 0.3rem 0;
+  font-size: 1.1rem;
+}
+
+.movie-card p {
+  margin: 0.3rem 0;
+  color: #cfcfcf;
+  font-size: 0.875rem;
+}
+
+.tag-age {
+  background-color: #ffbb33;
+  color: #000;
+  font-weight: bold;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  display: inline-block;
+  margin-bottom: 0.3rem;
+}
+
+.stars {
+  color: #f5c518;
 }
