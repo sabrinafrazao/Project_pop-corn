@@ -1,5 +1,5 @@
 import { Component, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router'; 
 
 import { Movie } from '../models/movies.model';
@@ -25,7 +25,9 @@ export class MovieDetailsComponent {
     private route: ActivatedRoute,
     private router: Router,
     private movieService: AbstractMovieService,
-    private cinemaService: AbstractCinemaService
+    private cinemaService: AbstractCinemaService,
+    private location: Location 
+
   ) {
     this.cinemas = this.cinemaService.cinemas;
 
@@ -43,6 +45,10 @@ export class MovieDetailsComponent {
   // func caso clique numa sessão
   selectSession(session: Session): void {
     this.router.navigate(['/booking', session.id]);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
     getStarRatingArray(rating: number): string[] {

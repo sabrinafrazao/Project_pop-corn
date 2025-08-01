@@ -1,15 +1,43 @@
-$color-background: #1b1b21;
-$color-surface: #2b2b35;
-$color-text-primary: #ffffff;
-$color-text-secondary: #bdbdc4;
-$color-highlight: #c2185b;
-$color-muted-date: #8483a3;
-$color-session-button: #8e8eb0;
-$color-link: #1a73e8;
-$color-rating: #f5c518;
-$color-border: #3a3a45;
+// sabrinafrazao/project_pop-corn/Project_pop-corn-feat-refactor-service/pop_corn/src/app/movies/movie-details/movie-details.component.scss
+@use "sass:color"; // Adicionado para usar as novas funções de cor do SASS
+
+// Paleta de cores sugerida
+$color-background: #121212;
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800; // Amarelo vibrante
+$color-muted-date: #2D3748;
+$color-session-button: #4A5568;
+$color-link: #FFC800;
+$color-rating: #FFC800;
+$color-border: #2D3748;
 
 $font-family-base: 'Arial', sans-serif;
+
+// Estilo para o botão de retorno
+.return-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    border: 1px solid $color-border;
+    color: $color-text-secondary;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+
+    &:hover {
+        background-color: $color-surface;
+        color: $color-text-primary;
+    }
+
+    .material-icons {
+        font-size: 1.2rem;
+    }
+}
 
 .details-container {
     padding: 2rem 3rem;
@@ -24,7 +52,6 @@ $font-family-base: 'Arial', sans-serif;
     display: flex;
     gap: 2rem;
     margin-bottom: 2rem;
-    
 }
 
 .poster {
@@ -43,7 +70,7 @@ $font-family-base: 'Arial', sans-serif;
         color: $color-text-primary;
     }
 
-.rating {
+    .rating {
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -52,22 +79,22 @@ $font-family-base: 'Arial', sans-serif;
         font-size: 1.2rem;
     }
 
-p {
+    p {
         color: $color-text-secondary;
         line-height: 1.6;
     }
 
-.synopsis {
+    .synopsis {
         max-width: 600px;
     }
 
-.read-more {
+    .read-more {
         color: $color-link;
         text-decoration: none;
         font-weight: bold;
 
-    &:hover {
-        text-decoration: underline;
+        &:hover {
+            text-decoration: underline;
         }
     }
 }
@@ -81,7 +108,7 @@ p {
     gap: 1rem;
     margin-bottom: 1rem;
 
-.date-item {
+    .date-item {
         padding: 0.75rem 1.5rem;
         border: 1px solid $color-border;
         border-radius: 8px;
@@ -90,19 +117,20 @@ p {
         cursor: pointer;
         text-align: center;
 
-    &.active {
-        background-color: $color-highlight;
-        border-color: $color-highlight;
+        &.active {
+            background-color: $color-highlight;
+            border-color: $color-highlight;
+            color: $color-background;
         }
 
-    .day-of-week {
-        display: block;
-        font-size: 0.8rem;
-        font-weight: bold;
+        .day-of-week {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
-    .day {
-        font-size: 1rem;
+        .day {
+            font-size: 1rem;
         }
     }
 }
@@ -131,10 +159,10 @@ p {
         font-weight: bold;
         margin: 0 0 0.5rem 0;
 
-    span {
-        font-weight: normal;
-        color: $color-text-secondary;
-        font-size: 0.9rem;
+        span {
+            font-weight: normal;
+            color: $color-text-secondary;
+            font-size: 0.9rem;
         }
     }
 }
@@ -147,16 +175,17 @@ p {
 
 .session-time {
     padding: 0.5rem 1.25rem;
-    border: 1px solid transparent;
+    border: 1px solid $color-session-button;
     border-radius: 4px;
-    background-color: $color-session-button;
-    color: $color-text-primary;
+    background-color: transparent;
+    color: $color-text-secondary;
     font-weight: bold;
     cursor: pointer;
 
     &:hover {
-        background-color: adjust-color($color-session-button, $lightness: 5%);
+        // Se a função adjust-color estava aqui, ela seria trocada por:
+        // background-color: color.adjust($color-session-button, $lightness: 10%);
+        background-color: $color-session-button;
+        color: $color-text-primary;
     }
 }
-
-
