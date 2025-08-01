@@ -139,7 +139,61 @@ Como resultado, foi definido o seguinte plano de ação:
 
 ---
 
+## 🗓️ Período: 25/07 a 31/07
+
+### ✅ Atividades Realizadas
+
+**Implementação do Fluxo Completo de Compra (Nelson):**
+
+* Criação de novas telas:
+
+  * **Bomboniere**: seleção de alimentos e bebidas.
+  * **Pagamento**: resumo do pedido, CPF, QR Code e opção de PIX.
+  * **Histórico de Pedidos**: visualização de pedidos anteriores.
+* Implementação do módulo `Order` para gerenciamento centralizado de estado do pedido (ingressos, lugares e produtos), com persistência via `localStorage`.
+
+**Componentes e Serviços Criados:**
+
+* `order.service.ts` e `finalized-order.model.ts` no módulo `order`.
+* `bomboniere.component`, `product-card`, `bomboniere.service.ts` e `bomboniere.model.ts`.
+* `payment.component` e `order-history.component`.
+
+**Atualizações em Componentes Existentes:**
+
+* **Rotas** adicionadas para as novas páginas (`/bomboniere`, `/payment`, `/meus-pedidos`).
+* **movie-details**: nova paleta de cores e botão de retorno.
+* **booking**:
+
+  * Novo fluxo de seleção (escolha de lugares antes dos ingressos).
+  * Integração com o `OrderService`.
+  * Ajustes visuais e na UX.
+* **sidebar**:
+
+  * Redesenho visual.
+  * Substituição do link "Dados de Pagamento" por "Meus Pedidos".
+  * Sidebar responsiva com botão de menu.
+* `styles.scss`: importação e aplicação da fonte **Roboto** globalmente.
+
+**Ajustes Visuais e Feedback (Sabrina):**
+
+* Aplicadas as alterações solicitadas pela Juliana referentes ao layout geral.
+* Finalização do componente e visual da barra de **pesquisa de filmes** com foco em clareza e consistência visual.
+
+**Fluxo de Autenticação (Dimerson):**
+
+* Desenvolvimento das telas e fluxos de **cadastro** e **login**, incluindo o layout e a integração inicial com o controle de estado de usuário.
+
+### 📌 Resultados
+
+* Novo fluxo completo de compra implementado.
+* Telas de bomboniere, pagamento e histórico funcionais e integradas.
+* Componentes visuais refinados com nova identidade visual.
+* Aplicação mais responsiva e visualmente coesa.
+
+---
+
 ### 👥 Equipe
+
 - Dimerson Coelho
 - Nelson Thiago
 - Sabrina Frazão
