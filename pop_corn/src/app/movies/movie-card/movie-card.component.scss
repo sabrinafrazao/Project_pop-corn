@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-family: 'Roboto', sans-serif;
 }
 
 :host a {
@@ -10,32 +11,66 @@
 .movie-card {
   background-color: #2b2a33;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.5rem;
   color: #ffffff;
   text-align: center;
   transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
+  /* 🔒 Tamanho fixo e padronizado */
+  height: 400px;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
 }
 
 .movie-card:hover {
   transform: scale(1.03);
 }
 
+/* ✅ Imagem no tamanho natural */
 .movie-card img {
   border-radius: 6px;
   width: 100%;
-  height: auto;
+  height: auto; 
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+  max-height: 250px;
 }
 
-.movie-card h3 {
-  margin: 0.5rem 0 0.3rem 0;
+.movie-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+/* ✅ Título completo, sem linha */
+.movie-card .title {
   font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0.3rem 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-decoration: none; /* ⬅️ Remove qualquer linha */
 }
 
-.movie-card p {
-  margin: 0.3rem 0;
+/* ✅ Gênero com reticências */
+.movie-card .genre {
+  font-size: 0.85rem;
   color: #cfcfcf;
-  font-size: 0.875rem;
+  margin: 0.2rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-card .duration {
+  font-size: 0.85rem;
+  color: #cfcfcf;
+  margin: 0.2rem 0;
 }
 
 .tag-age {
@@ -46,7 +81,12 @@
   border-radius: 4px;
   font-size: 0.75rem;
   display: inline-block;
-  margin-bottom: 0.3rem;
+  margin: 0.3rem 0;
+}
+
+.rating {
+  font-size: 0.85rem;
+  color: #cfcfcf;
 }
 
 .stars {

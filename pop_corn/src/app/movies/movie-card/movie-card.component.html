@@ -1,10 +1,13 @@
 <a [routerLink]="['/movie', movie.id]">
   <div class="movie-card">
     <img [src]="movie.image" alt="{{ movie.title }}" />
-    <h3>{{ movie.title }}</h3>
-    <p>{{ movie.genre }}</p>
-    <p>{{ movie.duration }}</p>
 
+    <div class="movie-info">
+      <h3 class="title" title="{{ movie.title }}">{{ movie.title }}</h3>
+      <p class="genre" title="{{ movie.genre }}">
+        {{ movie.genre | slice:0:20 }}<span *ngIf="movie.genre.length > 20">...</span>
+      </p>
+      <p class="duration">{{ movie.duration }}</p>
     <!-- Faixa etária opcional -->
     <span class="tag-age" *ngIf="movie.ageRating">{{ movie.ageRating }}</span>
 
@@ -14,6 +17,6 @@
       {{ movie.rating }} ({{ movie.votes | number }})
     </p>
   </div>
+  </div>
 </a>
-
 
