@@ -1,0 +1,140 @@
+// src/app/bomboniere/product-card/product-card.component.scss
+@use "sass:color";
+
+// Variáveis de Cor (Consistentes com o resto do projeto)
+$color-background: #121212;
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+$color-disabled: #333333;
+$color-image-background: #FFFFFF;
+
+:host {
+    display: block;
+}
+
+.card-container {
+    background-color: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex; // Ponto chave: habilita o flexbox
+    flex-direction: row; // Ponto chave: layout horizontal
+    height: 160px; // Altura fixa para o card
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+    &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+}
+
+.product-image-container {
+    width: 160px; // Largura fixa para a imagem (criando um quadrado)
+    height: 160px;
+    flex-shrink: 0; // Impede que a imagem encolha
+    background-color: $color-image-background;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid $color-border; // Borda separadora
+
+    .product-image {
+        max-width: 90%; // Um pouco de padding visual
+        max-height: 90%;
+        object-fit: contain;
+    }
+}
+
+.product-details {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; // Faz esta área ocupar todo o espaço restante
+    overflow: hidden; // Evita que o conteúdo vaze
+}
+
+.product-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $color-text-primary;
+    margin: 0 0 0.5rem;
+    white-space: nowrap; // Evita quebra de linha no nome
+    overflow: hidden;
+    text-overflow: ellipsis; // Adiciona "..." se o nome for muito longo
+}
+
+.product-description {
+    font-size: 0.9rem;
+    color: $color-text-secondary;
+    line-height: 1.5;
+    flex-grow: 1; // Empurra o footer para baixo
+    margin-bottom: 1rem;
+    // Limita a descrição a 2 linhas para evitar overflow
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto; // Garante que o footer fique na base
+}
+
+.product-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: $color-highlight;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    
+    button {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+        &:not(:disabled) {
+            background-color: transparent;
+            border: 1px solid $color-highlight;
+            color: $color-highlight;
+        }
+
+        &:not(:disabled):hover,
+        &:not(:disabled):active {
+            background-color: $color-highlight;
+            border-color: $color-highlight;
+            color: $color-background;
+        }
+        
+        &:disabled {
+            background-color: $color-disabled;
+            border: 1px solid $color-disabled;
+            color: $color-text-secondary;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    input {
+        width: 35px;
+        text-align: center;
+        border: none;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: $color-text-primary;
+        background: transparent;
+    }
+}

@@ -1,0 +1,132 @@
+// src/app/order-history/order-history.component.scss
+@use "sass:color"; // ADICIONADO
+
+// Variáveis de Cor
+$color-background: #121212;
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+
+:host {
+    display: block;
+    background-color: $color-background;
+    min-height: 100vh;
+}
+
+.page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+
+    h1 {
+        font-size: 2.5rem;
+        color: $color-text-primary;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+}
+
+.no-orders {
+    text-align: center;
+    padding: 4rem;
+    background-color: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+
+    p {
+        font-size: 1.2rem;
+        color: $color-text-secondary;
+        margin: 0 0 1.5rem;
+    }
+
+    button {
+        padding: 1rem 2rem;
+        border: none;
+        background-color: $color-highlight;
+        color: $color-background;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.order-card {
+    background-color: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: color.adjust($color-surface, $lightness: -3%); // CORRIGIDO
+    border-bottom: 1px solid $color-border;
+
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .order-id {
+        font-weight: bold;
+        color: $color-text-primary;
+    }
+
+    .order-date {
+        font-size: 0.85rem;
+        color: $color-text-secondary;
+    }
+
+    .order-status {
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        &.aguardando-pagamento {
+            background-color: color.scale($color-highlight, $alpha: -80%);
+            color: $color-highlight;
+        }
+    }
+}
+
+.order-body {
+    padding: 1.5rem;
+    color: $color-text-secondary;
+    line-height: 1.6;
+
+    p {
+        margin: 0 0 0.5rem;
+    }
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 1rem 1.5rem;
+    background-color: color.adjust($color-surface, $lightness: -3%); // CORRIGIDO
+    border-top: 1px solid $color-border;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: $color-text-primary;
+}
