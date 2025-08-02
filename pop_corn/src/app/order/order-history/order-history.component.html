@@ -1,0 +1,34 @@
+<!-- src/app/order-history/order-history.component.html -->
+<div class="page-container">
+  <h1>Meus Pedidos</h1>
+
+  <div class="no-orders" *ngIf="myOrders().length === 0">
+    <p>Você ainda não fez nenhum pedido.</p>
+    <button (click)="router.navigate(['/'])">Ver filmes em cartaz</button>
+  </div>
+
+  <div class="orders-list" *ngIf="myOrders().length > 0">
+    <div class="order-card" *ngFor="let order of myOrders()">
+      <div class="order-header">
+        <div>
+          <span class="order-id">Pedido: {{ order.orderId }}</span>
+          <span class="order-date">{{ order.orderDate | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <span class="order-status" [ngClass]="order.status.replace(' ', '-').toLowerCase()">
+          {{ order.status }}
+        </span>
+      </div>
+      <div class="order-body">
+        <!-- LÓGICA MOVIDA PARA O TS -->
+        <p>{{ getTicketCount(order.ticketOrder) }} ingresso(s)</p>
+        <p *ngIf="order.bomboniereOrder.length > 0">
+          {{ getBomboniereCount(order.bomboniereOrder) }} item(ns) da bomboniere
+        </p>
+      </div>
+      <div class="order-footer">
+        <span>TOTAL</span>
+        <span>{{ order.totalPrice | currency:'BRL' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

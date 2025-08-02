@@ -1,0 +1,80 @@
+<!-- src/app/payment/payment.component.html -->
+<!-- Tela de Confirmação com QR Code (Overlay) -->
+<div class="qr-code-overlay" *ngIf="showQrCodeView() && finalizedOrderDetails() as order">
+  <div class="qr-code-modal">
+    <h2>Pedido Realizado!</h2>
+    <p>Realize o pagamento para garantir seus ingressos.</p>
+    <img [src]="order.pixQrCode" alt="QR Code para pagamento PIX">
+    <div class="pix-copy-paste">
+      <input type="text" [value]="order.pixCopyPaste" readonly #pixInput>
+      <button (click)="pixInput.select()">Copiar</button>
+    </div>
+    <p class="status">Status: <strong>{{ order.status }}</strong></p>
+    <button class="primary-button" (click)="goToMyOrders()">Ver meus pedidos</button>
+  </div>
+</div>
+
+<!-- Tela Principal de Pagamento -->
+<div class="page-container" [class.hidden]="showQrCodeView()">
+  <div class="payment-column">
+    <div class="header">
+      <button (click)="goBack()" class="return-button">
+          <span class="material-icons">arrow_back</span> Voltar
+      </button>
+      <h1>Pagamento</h1>
+    </div>
+    
+    <div class="payment-options">
+      <h3>Escolha a forma de pagamento</h3>
+      <button class="payment-method" [class.selected]="paymentMethod() === 'PIX'" (click)="selectPix()">
+        <span class="material-icons">pix</span>
+        PIX
+      </button>
+    </div>
+
+    <div class="cpf-section" *ngIf="paymentMethod() === 'PIX'">
+      <h3>CPF na nota?</h3>
+      <!-- INPUT CORRIGIDO -->
+      <input type="text" placeholder="Digite seu CPF (apenas números)" 
+             [value]="cpf()"
+             (input)="onCpfInput($event)" 
+             maxlength="11">
+    </div>
+  </div>
+
+  <!-- Barra Lateral de Resumo -->
+  <div class="summary-sidebar">
+    <h3 class="summary-title">Resumo do Pedido</h3>
+    
+    <div class="summary-section">
+      <h4>Ingressos</h4>
+      <div *ngFor="let ticket of orderService.ticketOrder()" class="summary-item">
+        <span>{{ ticket.quantity }}x {{ ticket.ticketType.name }}</span>
+        <span>{{ (ticket.quantity * ticket.ticketType.price) | currency:'BRL' }}</span>
+      </div>
+      <div class="summary-item seats" *ngIf="selectedSeatsText()">
+        <span>Assentos: {{ selectedSeatsText() }}</span>
+      </div>
+    </div>
+
+    <div class="summary-section" *ngIf="orderService.bomboniereOrder().length > 0">
+      <h4>Comidas & Bebidas</h4>
+      <div *ngFor="let item of orderService.bomboniereOrder()" class="summary-item">
+        <span>{{ item.quantity }}x {{ item.product.name }}</span>
+        <span>{{ (item.quantity * item.product.price) | currency:'BRL' }}</span>
+      </div>
+    </div>
+    
+    <div class="summary-footer">
+      <div class="total-price">
+        <span>TOTAL</span>
+        <span>{{ orderService.totalPrice() | currency:'BRL' }}</span>
+      </div>
+      <button class="payment-button" 
+              [disabled]="paymentMethod() !== 'PIX' || cpf().length < 11" 
+              (click)="finalizeOrder()">
+        Finalizar Pedido
+      </button>
+    </div>
+  </div>
+</div>

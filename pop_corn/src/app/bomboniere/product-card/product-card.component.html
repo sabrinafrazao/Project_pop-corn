@@ -1,0 +1,18 @@
+<div class="card-container">
+  <div class="product-image-container">
+      <img [src]="product.image" [alt]="product.name" class="product-image">
+  </div>
+
+  <div class="product-details">
+    <h3 class="product-name">{{ product.name }}</h3>
+    <p class="product-description">{{ product.description }}</p>
+    <div class="footer">
+      <span class="product-price">{{ product.price | currency:'BRL' }}</span>
+      <div class="quantity-selector">
+        <button (click)="decrement()" [disabled]="quantity() === 0">-</button>
+        <input type="text" [value]="quantity()" readonly>
+        <button (click)="increment()">+</button>
+      </div>
+    </div>
+  </div>
+</div>
