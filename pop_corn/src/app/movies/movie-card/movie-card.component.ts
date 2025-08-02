@@ -6,7 +6,7 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [RouterLink,  DecimalPipe, CommonModule],
+  imports: [RouterLink, CommonModule],
   templateUrl: './movie-card.component.html',
   styleUrl: './movie-card.component.scss'
 })

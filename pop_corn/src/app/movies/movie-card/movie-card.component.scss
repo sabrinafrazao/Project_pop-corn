@@ -33,7 +33,7 @@
 .movie-card img {
   border-radius: 6px;
   width: 100%;
-  height: auto; 
+  height: auto;
   object-fit: contain;
   margin-bottom: 0.5rem;
   max-height: 250px;
@@ -91,4 +91,10 @@
 
 .stars {
   color: #f5c518;
+}
+
+.rating {
+  font-size: 0.9rem;
+  color: #cfcfcf;
+  margin-top: auto; /* garante que ele fique no fim */
 }
