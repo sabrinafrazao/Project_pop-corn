@@ -1,7 +1,8 @@
-<nav class="sidebar">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<aside class="sidebar">
   <div class="sidebar-header">
-    <a href="#" class="logo">Pop&Corn</a>
+    <a routerLink="/" class="logo">Pop&Corn</a>
     <button class="toggle-button" (click)="toggleSidebar()">
       <span class="material-icons">
         {{ isCollapsed() ? 'menu' : 'menu_open' }}
@@ -9,38 +10,62 @@
     </button>
   </div>
 
-  <div class="profile-section">
-    <div class="profile-avatar"></div>
+  
+  <!-- Secção de Perfil (visível apenas quando logado) -->
+  <div class="profile-section" *ngIf="authService.isAuthenticated()">
+    <img [src]="authService.currentUser()?.avatarUrl" alt="Avatar do utilizador" class="profile-avatar">
     <div class="profile-info">
-      <span class="profile-name">Sabrina Frazão</span>
-      <a href="#" class="profile-link">Ver perfil</a>
+      <span class="profile-name">{{ authService.currentUser()?.name }}</span>
+      <a routerLink="/perfil" class="profile-link">Ver perfil</a>
     </div>
   </div>
 
-  <ul class="nav-links">
-    <!-- <li>
-      <a href="#" class="nav-link">
-        <span class="material-icons">person_outline</span>
-        <span>Perfil</span>
-      </a>
-    </li> -->
-    <li>
-      <a href="#" class="nav-link active">
-        <span class="material-icons">theaters</span>
-        <span>Filmes</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="nav-link">
-        <span class="material-icons">movie</span>
-        <span>Cinemas</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="nav-link">
-        <span class="material-icons">payment</span>
-        <span>Dados de Pagamento</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+
+  <nav class="menu">
+    <ul class="nav-links">
+      <!-- Links que aparecem para todos -->
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <span class="material-icons">theaters</span>
+          <span class="nav-text">Em Cartaz</span>
+        </a>
+      </li>
+      
+      <!-- Links que só aparecem se o utilizador estiver logado -->
+      <li *ngIf="authService.isAuthenticated()">
+        <a routerLink="/meus-pedidos" routerLinkActive="active">
+          <span class="material-icons">receipt_long</span>
+          <span class="nav-text">Meus Pedidos</span>
+        </a>
+      </li>
+
+      <!-- Link para o painel de admin (ADMIN ou MASTER) -->
+      <li *ngIf="authService.isAdmin()">
+        <a routerLink="/admin/gerir-filmes" routerLinkActive="active">
+          <span class="material-icons">movie_edit</span>
+          <span class="nav-text">Gerir Filmes</span>
+        </a>
+      </li>
+
+      <!-- Links apenas para MASTER -->
+      <li *ngIf="authService.isMaster()">
+        <a routerLink="/master/dashboard-negocios" routerLinkActive="active">
+          <span class="material-icons">bar_chart</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Secção de Login/Logout na base -->
+  <div class="logout-section">
+    <a *ngIf="authService.isAuthenticated()" (click)="authService.logout()">
+      <span class="material-icons">logout</span>
+      <span class="nav-text">Sair</span>
+    </a>
+    <a *ngIf="!authService.isAuthenticated()" routerLink="/login">
+      <span class="material-icons">login</span>
+      <span class="nav-text">Login</span>
+    </a>
+  </div>
+</aside>

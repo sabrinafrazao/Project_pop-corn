@@ -1,54 +1,60 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@use "sass:color";
+
+// Variáveis de cor alinhadas com o resto do projeto
+$color-surface: #1E1E1E;
+$color-background: #121212; // Adicionada para corrigir o erro
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+
+$width-expanded: 280px;
+$width-collapsed: 88px;
+$transition-speed: 0.3s;
 
 :host {
   display: block;
+  flex-shrink: 0;
+  width: $width-expanded;
   height: 100vh;
-  width: 280px; // Largura quando expandido
-  background-color: #1a1d29;
-  color: #fff;
+  background-color: $color-surface;
+  border-right: 1px solid $color-border;
+  transition: width $transition-speed ease-in-out;
   padding: 1.5rem;
   box-sizing: border-box;
-  flex-shrink: 0;
-  transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
 }
 
 .sidebar {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
   overflow: hidden;
 }
 
-// --- Header e Botão de Toggle ---
+// --- Header ---
 .sidebar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
-  width: 100%;
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $color-text-primary;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s 0.1s;
+  }
+
+  .toggle-button {
+    background: none;
+    border: none;
+    color: $color-text-secondary;
+    cursor: pointer;
+  }
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: opacity 0.2s 0.1s, width 0.2s 0.1s; // Adiciona um pequeno delay na transição
-}
-
-.toggle-button {
-  background: none;
-  border: none;
-  color: #a0aec0;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-}
-
-// --- Seção do Perfil ---
 .profile-section {
   display: flex;
   align-items: center;
@@ -56,101 +62,203 @@
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 2rem;
-  transition: all 0.3s ease-in-out;
-}
+  transition: all $transition-speed ease-in-out;
+  overflow: hidden;
 
-.profile-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #4a5568;
-  margin-right: 1rem;
-  flex-shrink: 0;
-  transition: margin-right 0.3s ease-in-out;
-}
-
-.profile-info {
-  transition: opacity 0.2s, width 0.2s;
-  white-space: nowrap;
-  .profile-name { display: block; font-weight: 600; }
-  .profile-link { font-size: 0.8rem; color: #a0aec0; text-decoration: none; &:hover { text-decoration: underline; }}
-}
-
-// --- Links de Navegação ---
-.nav-links {
-  list-style: none; // Remove as "bolinhas" da lista
-  padding: 0;
-  margin: 0;
-  flex-grow: 1;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  padding: 0.85rem 1rem;
-  border-radius: 8px;
-  color: #a0aec0;
-  text-decoration: none;
-  margin-bottom: 0.5rem;
-  transition: all 0.3s ease-in-out;
-
-  .material-icons {
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
     margin-right: 1rem;
-    transition: margin-right 0.3s ease-in-out;
-  }
-  
-  span:last-child {
-      white-space: nowrap;
-      transition: opacity 0.2s, width 0.2s;
+    flex-shrink: 0;
+    transition: margin-right $transition-speed ease-in-out;
   }
 
-  &:hover { background-color: #2d3748; color: #fff; }
-  &.active { background-color: #4a5568; color: #fff; font-weight: 600; }
+  .profile-info {
+    transition: opacity 0.2s, width 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+
+    .profile-name {
+      display: block;
+      font-weight: 600;
+      color: $color-text-primary;
+    }
+
+    .profile-link {
+      font-size: 0.8rem;
+      color: $color-text-secondary;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
-// --- ESTILOS CORRIGIDOS PARA O ESTADO RECOLHIDO ---
-:host(.collapsed) {
-  width: 88px;
-  padding: 1.5rem 0; // Ajusta o padding lateral
+// --- Menu de Navegação ---
+.menu {
+  flex-grow: 1;
 
-  // Esconde o logo e o texto do perfil de forma mais robusta
+  .nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    color: $color-text-secondary;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s, background-color 0.2s;
+
+    .nav-text {
+      transition: opacity 0.2s;
+    }
+
+    &:hover {
+      color: $color-text-primary;
+      background-color: color.scale($color-surface, $lightness: 10%);
+    }
+
+    &.active {
+      background-color: $color-highlight;
+      color: $color-background;
+      font-weight: bold;
+
+      .material-icons {
+        color: $color-background;
+      }
+    }
+  }
+}
+
+// --- Secção de Logout/Login ---
+.logout-section {
+  border-top: 1px solid $color-border;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: $color-text-secondary;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-text-primary;
+    }
+  }
+}
+
+// --- LÓGICA PARA RECOLHER (CORRIGIDA) ---
+:host(.collapsed) {
+  width: $width-collapsed;
+  padding: 0;
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+
+  .sidebar-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    padding: 1rem 0;
+  }
+
+  .toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+
+  // 🔥 Esconde também o nome e o link do perfil
+  .profile-section {
+    padding: 0.5rem 0;
+    background-color: transparent;
+    justify-content: center;
+    margin-bottom: 1rem;
+    
+    .profile-info {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .profile-avatar {
+      margin-right: 0; // remove espaço lateral
+    }
+  }
+
   .logo,
-  .profile-info {
+  .nav-text {
     opacity: 0;
     width: 0;
     overflow: hidden;
-    pointer-events: none; // Impede interações com os elementos escondidos
-  }
-  
-  .sidebar-header {
-    justify-content: center;
-  }
-  
-  .toggle-button {
-    margin-left: 0; // Remove a margem para centralizar o botão
+    pointer-events: none;
   }
 
-  // Centraliza o avatar
-  .profile-section {
+  .menu {
+    width: 100%;
     padding: 0;
-    background-color: transparent;
-    justify-content: center;
-  }
-  .profile-avatar {
-    margin-right: 0; // Remove a margem para centralizar
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  // Centraliza os ícones de navegação
-  .nav-link {
+  .menu a {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    .material-icons {
-      margin-right: 0;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    gap: 0;
+  }
+
+  .logout-section {
+    width: 100%;
+    border-top: 1px solid $color-border;
+    margin-top: auto;
+    padding-top: 1rem;
+
+    display: flex;
+    justify-content: center;   // ✅ agora centralizado igual aos ícones do menu
+    align-items: center;
+
+    a {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      justify-content: center; // ✅ centraliza o ícone no botão
+      align-items: center;
+      padding: 0;
     }
-    // Esconde o texto dos links de forma mais robusta
-    span:last-child {
-      opacity: 0;
-      width: 0;
-      display: none;
-    }
+  }
+
+  .material-icons {
+    font-size: 24px;
+    line-height: 1;
   }
 }
