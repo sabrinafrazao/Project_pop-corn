@@ -1,8 +1,7 @@
-// src/app/payment/payment.component.ts
-import { Component, signal, inject, computed } from '@angular/core'; // Adicionar computed
+import { Component, signal, inject, computed } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { OrderService } from '../../order/services/order.service';
+import { AbstractOrderService } from '../../order/services/abstract-order.service';
 import { FinalizedOrder } from '../../order/models/finalized-order.model';
 
 @Component({
@@ -13,25 +12,25 @@ import { FinalizedOrder } from '../../order/models/finalized-order.model';
   styleUrls: ['./payment.component.scss']
 })
 export class PaymentComponent {
-  orderService = inject(OrderService);
+  // CORRIGIDO: Injeta a classe abstrata
+  orderService = inject(AbstractOrderService);
   router = inject(Router);
   location = inject(Location);
 
+  // Sinais para controlar o estado da UI
   paymentMethod = signal<'NONE' | 'PIX'>('NONE');
   cpf = signal('');
   showQrCodeView = signal(false);
   finalizedOrderDetails = signal<FinalizedOrder | undefined>(undefined);
 
-  //Sinal computado para formatar os assentos de forma segura
+  // CORRIGIDO: Adicionado o sinal computado para formatar os assentos
   selectedSeatsText = computed(() => {
     const seats = this.orderService.selectedSeats();
-    if (!seats || seats.length === 0) {
-      return '';
-    }
     return seats.map(s => s.id).join(', ');
   });
 
   constructor() {
+    // Proteção de rota: se não há itens no carrinho, volta pra home
     if (this.orderService.totalPrice() === 0) {
       this.router.navigate(['/']);
     }

@@ -1,11 +1,11 @@
-// src/app/bomboniere/bomboniere.component.ts
-import { CommonModule, Location } from '@angular/common';
-import { Component, computed, inject } from '@angular/core'; // Adicionar 'computed'
+import { Component, inject, computed } from '@angular/core'; // Adicionar computed
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { OrderService } from '../../order/services/order.service';
-import { BomboniereService } from '../bomboniere.service';
-import { BomboniereProduct } from '../models/bomboniere.model';
+import { Location } from '@angular/common';
+import { AbstractOrderService } from '../../order/services/abstract-order.service';
+import { AbstractBomboniereService } from '../services/abstract-bomboniere.service';
 import { ProductCardComponent } from '../product-card/product-card.component';
+import { BomboniereProduct } from '../models/bomboniere.model';
 
 @Component({
   selector: 'app-bomboniere',
@@ -14,16 +14,16 @@ import { ProductCardComponent } from '../product-card/product-card.component';
   templateUrl: './bomboniere.component.html',
   styleUrls: ['./bomboniere.component.scss']
 })
-
 export class BomboniereComponent {
-  orderService = inject(OrderService);
-  bomboniereService = inject(BomboniereService);
+  orderService = inject(AbstractOrderService);
+  bomboniereService = inject(AbstractBomboniereService);
   router = inject(Router);
   location = inject(Location);
 
   products = this.bomboniereService.products;
-  
-  // Sinal computado para formatar os assentos de forma segura
+  bomboniereSelected = this.orderService.bomboniereOrder;
+
+  // NOVO: Sinal computado para formatar os assentos de forma segura
   selectedSeatsText = computed(() => {
     const seats = this.orderService.selectedSeats();
     if (!seats || seats.length === 0) {
@@ -48,8 +48,6 @@ export class BomboniereComponent {
   }
 
   proceedToPayment(): void {
-    // Lógica para navegar para a tela de pagamento final
     this.router.navigate(['/payment']); 
-
   }
 }

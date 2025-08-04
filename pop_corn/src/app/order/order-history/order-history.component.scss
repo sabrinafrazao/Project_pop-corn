@@ -1,5 +1,5 @@
 // src/app/order-history/order-history.component.scss
-@use "sass:color"; // ADICIONADO
+@use "sass:color";
 
 // Variáveis de Cor
 $color-background: #121212;
@@ -77,8 +77,9 @@ $color-border: #2D3748;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
-    background-color: color.adjust($color-surface, $lightness: -3%); // CORRIGIDO
+    background-color: color.adjust($color-surface, $lightness: -3%);
     border-bottom: 1px solid $color-border;
+    cursor: pointer;
 
     div {
         display: flex;
@@ -106,27 +107,104 @@ $color-border: #2D3748;
             background-color: color.scale($color-highlight, $alpha: -80%);
             color: $color-highlight;
         }
+
+        &.cancelado {
+            background-color: #4A5568;
+            color: #A0AEC0;
+        }
     }
 }
 
-.order-body {
-    padding: 1.5rem;
-    color: $color-text-secondary;
-    line-height: 1.6;
-
-    p {
-        margin: 0 0 0.5rem;
+// --- SECÇÃO DE ESTILOS ADICIONADA ---
+.order-details {
+  padding: 1.5rem;
+  background-color: color.adjust($color-surface, $lightness: -2%);
+  
+  .movie-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    .movie-poster {
+      width: 60px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
     }
+    
+    h4 { margin: 0 0 0.25rem; color: $color-text-primary; }
+    p { margin: 0; font-size: 0.9rem; color: $color-text-secondary; }
+  }
+  
+  .details-section {
+    margin-bottom: 1rem;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    h5 {
+      margin: 0 0 0.5rem;
+      color: $color-highlight;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    p, ul {
+      margin: 0;
+      font-size: 0.9rem;
+      color: $color-text-secondary;
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      li {
+          margin-bottom: 0.25rem;
+      }
+    }
+  }
 }
+
 
 .order-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 1rem 1.5rem;
-    background-color: color.adjust($color-surface, $lightness: -3%); // CORRIGIDO
-    border-top: 1px solid $color-border;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: $color-text-primary;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: color.adjust($color-surface, $lightness: -3%);
+  border-top: 1px solid $color-border;
+  
+  .total-price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $color-text-primary;
+
+      span:first-child {
+          font-size: 0.9rem;
+          color: $color-text-secondary;
+          margin-right: 0.5rem;
+      }
+  }
+
+  .cancel-button {
+      background-color: transparent;
+      border: 1px solid #E53E3E;
+      color: #E53E3E;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 1rem;
+      transition: all 0.2s;
+
+      &:hover {
+          background-color: #E53E3E;
+          color: $color-text-primary;
+      }
+  }
 }

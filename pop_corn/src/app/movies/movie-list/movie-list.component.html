@@ -1,16 +1,11 @@
 <div class="movie-list-container">
-
-  <!-- Campo de pesquisa com ícone -->
   <app-search-bar (search)="onSearchChange($event)"></app-search-bar>
 
-
-  <!-- Seção de filmes -->
   <section class="movie-section">
-    <h2>Em Cartaz</h2>
+    <h1 class="section-title">Em Cartaz</h1>
 
-    <div class="movie-cards">
+    <div class="movie-grid">
       <app-movie-card *ngFor="let movie of movies()" [movie]="movie"></app-movie-card>
     </div>
   </section>
-
 </div>

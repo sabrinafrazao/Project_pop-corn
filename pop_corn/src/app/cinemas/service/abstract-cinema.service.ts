@@ -17,4 +17,7 @@ export abstract class AbstractCinemaService {
   abstract deleteCinema(cinemaId: number): Observable<OperationResult>;
 
   // métodos para adicionar/editar/remover salas e sessões
+  // NOVOS MÉTODOS para o CRUD de sessões
+  abstract addSession(cinemaId: number, roomId: number, session: Omit<Session, 'id' | 'seatMap'>): Observable<OperationResult<Session>>;
+  abstract deleteSession(cinemaId: number, roomId: number, sessionId: number): Observable<OperationResult<void>>;
 }

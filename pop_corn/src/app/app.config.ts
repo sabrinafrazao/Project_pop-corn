@@ -6,6 +6,9 @@ import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 import { MovieProvider } from './movies/service/movie.provider.service';
 import { CinemaProvider } from './cinemas/service/cinema.provider.service';
+import { AuthProvider } from './auth/services/auth.provider.service';
+import { OrderProvider } from './order/services/order.provider.service';
+import { BomboniereProvider } from './bomboniere/services/bomboniere.provider.service.ts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +17,9 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideHttpClient(),
     MovieProvider,
-    CinemaProvider
+    CinemaProvider,
+    AuthProvider,
+    OrderProvider,
+    BomboniereProvider
   ]
 };

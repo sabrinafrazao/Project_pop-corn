@@ -2,7 +2,6 @@ import { Seat } from '../../cinemas/models/seat.model';
 import { Order as TicketOrder } from '../../booking/models/ticket.model';
 import { BomboniereOrder } from '../../bomboniere/models/bomboniere.model';
 
-// A interface agora vive em seu próprio arquivo, limpa e reutilizável.
 export interface FinalizedOrder {
   orderId: string;
   orderDate: Date;
@@ -10,12 +9,17 @@ export interface FinalizedOrder {
   cpf: string;
   totalPrice: number;
   
-  // Itens do pedido
+  // Detalhes do pedido adicionados
+  movieTitle: string;
+  movieImage: string;
+  cinemaName: string;
+  sessionTime: string;
+  
   selectedSeats: Seat[];
   ticketOrder: TicketOrder[];
   bomboniereOrder: BomboniereOrder[];
 
-  // Detalhes do PIX (para exibição)
+  // Detalhes do PIX
   pixQrCode: string;
   pixCopyPaste: string;
 }

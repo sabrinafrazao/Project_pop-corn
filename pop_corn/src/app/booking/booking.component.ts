@@ -10,8 +10,8 @@ import { Session } from '../cinemas/models/session.model';
 import { AbstractCinemaService } from '../cinemas/service/abstract-cinema.service';
 import { Movie } from '../movies/models/movies.model';
 import { AbstractMovieService } from '../movies/service/abstract-movie.service';
-import { OrderService } from '../order/services/order.service';
 import { Order, TicketType } from './models/ticket.model';
+import { AbstractOrderService } from '../order/services/abstract-order.service';
 
 @Component({
   selector: 'app-booking',
@@ -27,7 +27,7 @@ export class BookingComponent {
   private cinemaService = inject(AbstractCinemaService);
   private movieService = inject(AbstractMovieService);
   private location = inject(Location);
-  private orderService = inject(OrderService);
+  private orderService = inject(AbstractOrderService);
 
   // Sinais de estado
   session: Signal<Session | undefined>;

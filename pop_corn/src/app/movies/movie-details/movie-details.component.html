@@ -34,9 +34,10 @@
             <span> • {{ room.type }} • {{ room.sound }}<span *ngIf="room.technology"> • {{ room.technology }}</span></span>
             </p>
             <div class="session-times">
+            <!-- CORREÇÃO: Passa o nome do cinema para a função -->
             <button class="session-time" 
                     *ngFor="let session of room.sessions" 
-                    (click)="selectSession(session)">
+                    (click)="selectSession(session, cinema.name)">
                 {{ session.time }}
             </button>
             </div>

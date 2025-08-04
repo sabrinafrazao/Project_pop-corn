@@ -1,20 +1,24 @@
+// Variáveis de cor
+$color-background: #121212;
+$color-text-primary: #FFFFFF;
+
 .movie-list-container {
-  background-color: #1c1b22;
-  color: #ffffff;
-  padding: 20px;
+  background-color: $color-background;
+  color: $color-text-primary;
+  padding: 2rem;
   min-height: 100vh;
 }
 
-
-
-.movie-section h2 {
-  margin-bottom: 1rem;
+.section-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  margin-top: 1.5rem;
 }
 
-.movie-cards {
+.movie-grid {
   display: grid;
+  // CORREÇÃO: Reduz o tamanho mínimo de cada card para que mais caibam na linha
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
-  padding: 1rem;
+  gap: 1.5rem; // Reduzido o espaçamento para um visual mais compacto
 }
-

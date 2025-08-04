@@ -1,24 +1,35 @@
-<div class="search-bar-div">
+<div class="search-bar-container">
   <div class="search-bar">
+    <span class="material-icons search-icon">search</span>
     <input
       type="text"
-      [(ngModel)]="searchQuery"
+      [ngModel]="searchQuery()"
       (ngModelChange)="onSearchChange($event)"
+      (focus)="isFocused.set(true)"
+      (blur)="isFocused.set(false)"
       placeholder="Buscar Filme..."
     />
-    <span class="search-icon">🔍</span>
+    <button *ngIf="searchQuery()" class="clear-button" (click)="clearSearch()">
+      <span class="material-icons">close</span>
+    </button>
   </div>
 
-  @if (searchQuery) {
-    <div class="search-modal">
-      <div><strong>Resultados para:</strong> "{{ searchQuery }}"</div>
-      <ul>
-        @for (movie of searchResults(); track movie.id) {
-          <li><strong>{{ movie.title }}</strong></li>
-        } @empty {
-          <li>Nenhum filme encontrado.</li>
-        }
-      </ul>
-    </div>
-  }
+  <!-- O modal só aparece se houver texto E o input estiver focado -->
+  <div class="search-modal" *ngIf="searchQuery() && isFocused()">
+    <ul>
+      <li *ngFor="let movie of searchResults(); track movie.id">
+        <!-- Cada resultado é um link -->
+        <a (mousedown)="navigateToMovie(movie.id)">
+          <img [src]="movie.image" alt="{{ movie.title }}" class="result-image">
+          <div class="result-info">
+            <span class="result-title">{{ movie.title }}</span>
+            <span class="result-genre">{{ movie.genre }}</span>
+          </div>
+        </a>
+      </li>
+      <li *ngIf="searchResults().length === 0" class="no-results">
+        Nenhum filme encontrado.
+      </li>
+    </ul>
+  </div>
 </div>

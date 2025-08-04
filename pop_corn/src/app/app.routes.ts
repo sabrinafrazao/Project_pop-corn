@@ -6,12 +6,44 @@ import { BomboniereComponent } from './bomboniere/bomboniere/bomboniere.componen
 import { PaymentComponent } from './payment/payment/payment.component';
 import { OrderHistoryComponent } from './order/order-history/order-history.component';
 
+// guards e os componentes de autenticação
+import { authGuard, adminGuard, masterGuard } from './auth/auth.guard';
+import { LoginComponent } from './auth/login/login.component';
+import { ProfileComponent } from './auth/profile/profile.component';
+
+
 export const routes: Routes = [
+    // --- Rotas Públicas ---
+    { path: 'login', component: LoginComponent },
     { path: '', component: MovieListComponent },
     { path: 'movie/:id', component: MovieDetailsComponent },
-    { path: 'booking/:sessionId', component: BookingComponent },
-    { path: 'bomboniere', component: BomboniereComponent },
-    { path: 'payment', component: PaymentComponent },
-    { path: 'meus-pedidos', component: OrderHistoryComponent },
+
+    // --- Rotas de Utilizador Logado (protegidas pelo authGuard) ---
+    { path: 'booking/:sessionId', component: BookingComponent, canActivate: [authGuard] },
+    { path: 'bomboniere', component: BomboniereComponent, canActivate: [authGuard] },
+    { path: 'payment', component: PaymentComponent, canActivate: [authGuard] },
+    { path: 'meus-pedidos', component: OrderHistoryComponent, canActivate: [authGuard] },
+    { path: 'perfil', component: ProfileComponent, canActivate: [authGuard] },
+
+    // // --- Rotas de Admin (acessível por ADMIN e MASTER) ---
+    // {
+    //     path: 'admin/gerir-filmes',
+    //     // loadComponent: () => import('./admin/movie-management/movie-management.component').then(c => c.MovieManagementComponent),
+    //     canActivate: [authGuard, adminGuard]
+    // },
+
+    // // --- Rotas de Master (acessível APENAS por MASTER) ---
+    // {
+    //     path: 'master/dashboard-negocios',
+    //     // loadComponent: () => import('./master/dashboard/dashboard.component').then(c => c.DashboardComponent),
+    //     canActivate: [authGuard, masterGuard]
+    // },
+    // {
+    //     path: 'master/gerir-admins',
+    //     // loadComponent: () => import('./master/user-management/user-management.component').then(c => c.UserManagementComponent),
+    //     canActivate: [authGuard, masterGuard]
+    // },
+
+    // --- Rota de Fallback ---
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
