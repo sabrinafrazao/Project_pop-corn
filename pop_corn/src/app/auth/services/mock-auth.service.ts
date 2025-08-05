@@ -4,6 +4,37 @@ import { Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { AbstractAuthService } from './abstract-auth.service';
 
+// ===== 1. CONSTANTES DOS USUÁRIOS DE TESTE =====
+// Defina os três perfis de usuário aqui.
+
+const DEV_USER: User = {
+  id: '101',
+  name: 'Usuário Padrão',
+  email: 'user@test.com',
+  role: 'USER',
+  avatarUrl: 'https://placehold.co/100x100/FFFFFF/000000?text=U'
+  // Sem cinemaId para um usuário comum
+};
+
+const DEV_ADMIN: User = {
+  id: '998',
+  name: 'Dev Admin',
+  email: 'admin@dev.com',
+  role: 'ADMIN',
+  avatarUrl: 'https://placehold.co/100x100/4A5568/FFFFFF?text=A',
+  cinemaId: 1 // Gerencia o cinema "Centerplex"
+};
+
+const DEV_MASTER: User = {
+  id: '999',
+  name: 'Dev Master',
+  email: 'master@dev.com',
+  role: 'MASTER',
+  avatarUrl: 'https://placehold.co/100x100/FFC800/000000?text=M',
+  cinemaId: 2 // Gerencia o cinema "Cinépolis"
+};
+
+
 @Injectable()
 export class MockAuthService implements AbstractAuthService {
   private platformId = inject(PLATFORM_ID);
@@ -14,51 +45,38 @@ export class MockAuthService implements AbstractAuthService {
   isMaster = computed(() => this.currentUser()?.role === 'MASTER');
 
   constructor(private router: Router) {
-    // Simula persistência e um utilizador de desenvolvimento
     if (isPlatformBrowser(this.platformId)) {
       const userJson = localStorage.getItem('popcorn_user');
       if (userJson) {
         this.currentUser.set(JSON.parse(userJson));
       } else {
-        // Utilizador 'master' por defeito para facilitar o desenvolvimento
-        const devUser: User = {
-          id: '999',
-          name: 'Dev Master',
-          email: 'master@dev.com',
-          role: 'MASTER',
-          avatarUrl: 'https://placehold.co/100x100/FFC800/000000?text=M'
-        };
-        localStorage.setItem('popcorn_user', JSON.stringify(devUser));
-        this.currentUser.set(devUser);
+        
+        // ===== 2. PONTO DE TROCA =====
+        // Para alternar o usuário padrão, simplesmente troque a constante abaixo.
+        // Opções: DEV_USER, DEV_ADMIN, DEV_MASTER
+        const defaultUser = DEV_MASTER;
+        // ==============================
+
+        localStorage.setItem('popcorn_user', JSON.stringify(defaultUser));
+        this.currentUser.set(defaultUser);
       }
     }
   }
 
   login(email: string, password: string) {
-    let role: User['role'] = 'USER';
-    let avatarUrl = 'https://placehold.co/100x100/FFFFFF/000000?text=U';
-    let name = 'Utilizador';
-    let cinemaId: number | undefined = undefined;
-
+    let userToLogin: User;
     if (email.startsWith('admin@')) {
-      role = 'ADMIN';
-      avatarUrl = 'https://placehold.co/100x100/4A5568/FFFFFF?text=A';
-      name = 'Admin Cinema 1';
-      cinemaId = 1; // Este admin gere o cinema com ID 1
+      userToLogin = DEV_ADMIN;
+    } else if (email.startsWith('master@')) {
+      userToLogin = DEV_MASTER;
+    } else {
+      userToLogin = DEV_USER;
     }
-    if (email.startsWith('master@')) {
-      role = 'MASTER';
-      avatarUrl = 'https://placehold.co/100x100/FFC800/000000?text=M';
-      name = 'Master';
-    }
-
-    const fakeUser: User = { id: '1', name, email, role, avatarUrl, cinemaId };
 
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('popcorn_user', JSON.stringify(fakeUser));
+      localStorage.setItem('popcorn_user', JSON.stringify(userToLogin));
     }
-
-    this.currentUser.set(fakeUser);
+    this.currentUser.set(userToLogin);
     this.router.navigate(['/']);
   }
 
