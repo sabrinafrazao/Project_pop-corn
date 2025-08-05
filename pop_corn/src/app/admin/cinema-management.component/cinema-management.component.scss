@@ -17,11 +17,11 @@ $color-success: #48BB78;
 
   h1 {
     font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 }
 
-// Botão de Adicionar
+// Botão Adicionar (reutilizado de movie-management)
 .add-button {
   background-color: $color-highlight;
   color: $color-background;
@@ -38,8 +38,8 @@ $color-success: #48BB78;
   }
 }
 
-// Tabela de Filmes
-.movie-table {
+// Tabela de Cinemas
+.cinema-table {
   background-color: $color-surface;
   border-radius: 8px;
   overflow: hidden;
@@ -67,28 +67,30 @@ $color-success: #48BB78;
       display: flex;
       gap: 0.5rem;
 
-      button {
+       .delete-button {
+        background-color: $color-danger;
+        color: $color-text-primary;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 6px;
         cursor: pointer;
         font-weight: bold;
       }
-
-      .edit-button {
-        background-color: $color-text-secondary;
-        color: $color-surface;
-      }
-
-      .delete-button {
-        background-color: $color-danger;
-        color: $color-text-primary;
-      }
     }
   }
 }
 
-/* Estilos do Modal */
+.help-text {
+  margin-top: 1.5rem;
+  color: $color-text-secondary;
+  background-color: $color-border;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+
+// Estilos do Modal (reutilizado de movie-management)
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -124,7 +126,7 @@ $color-success: #48BB78;
       color: $color-text-secondary;
     }
 
-    input, textarea {
+    input, select {
       width: 100%;
       padding: 0.75rem;
       background-color: $color-background;
@@ -138,10 +140,6 @@ $color-success: #48BB78;
         outline: none;
         border-color: $color-highlight;
       }
-    }
-
-    textarea {
-        resize: vertical;
     }
   }
 
@@ -170,18 +168,4 @@ $color-success: #48BB78;
         color: $color-text-primary;
     }
   }
-  .image-preview {
-  display: block;
-  width: 150px;
-  height: auto;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-  border: 1px solid #2D3748; // $color-border
-}
-
-input[type="file"] {
-  color: #A0AEC0; // $color-text-secondary;
-  font-size: 0.9rem;
-}
 }

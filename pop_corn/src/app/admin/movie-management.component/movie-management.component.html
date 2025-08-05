@@ -1,1 +1,68 @@
-<p>movie-management.component works!</p>
+<div class="management-container">
+  <h1>Gerenciamento de Filmes</h1>
+  <button class="add-button" (click)="openAddModal()">Adicionar Novo Filme</button>
+
+  <div class="movie-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Gênero</th>
+          <th>Duração</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movie of movies()">
+          <td>{{ movie.title }}</td>
+          <td>{{ movie.genre }}</td>
+          <td>{{ movie.duration }}</td>
+          <td class="action-buttons">
+            <button class="edit-button" (click)="openEditModal(movie)">Editar</button>
+            <button class="delete-button" (click)="deleteMovie(movie.id)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isModalVisible()">
+  <div class="modal-content">
+    <h2>{{ modalMode() === 'add' ? 'Adicionar Novo Filme' : 'Editar Filme' }}</h2>
+    
+    <form #movieForm="ngForm" (ngSubmit)="handleSubmit(movieForm)">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input type="text" id="title" name="title" [(ngModel)]="currentMovieForForm.title" required>
+      </div>
+      <div class="form-group">
+        <label for="synopsis">Sinopse</label>
+        <textarea id="synopsis" name="synopsis" rows="4" [(ngModel)]="currentMovieForForm.synopsis" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="genre">Gênero</label>
+        <input type="text" id="genre" name="genre" [(ngModel)]="currentMovieForForm.genre" required>
+      </div>
+       <div class="form-group">
+        <label for="duration">Duração</label>
+        <input type="text" id="duration" name="duration" [(ngModel)]="currentMovieForForm.duration" required>
+      </div>
+       <div class="form-group">
+        <label for="rating">Classificação</label>
+        <input type="number" id="rating" name="rating" [(ngModel)]="currentMovieForForm.rating" step="0.1" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="image">Pôster do Filme</label>
+        <img [src]="imagePreview()" alt="Pré-visualização do pôster" class="image-preview" *ngIf="imagePreview()">
+        
+        <input type="file" id="image" (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/jpg">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-button" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="save-button" [disabled]="movieForm.invalid">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>

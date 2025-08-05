@@ -11,6 +11,11 @@ import { authGuard, adminGuard, masterGuard } from './auth/auth.guard';
 import { LoginComponent } from './auth/login/login.component';
 import { ProfileComponent } from './auth/profile/profile.component';
 
+// componentes de admin
+import { MovieManagementComponent } from './admin/movie-management.component/movie-management.component';
+import { SessionManagementComponent } from './admin/session-management.component/session-management.component';
+
+import { CinemaManagementComponent } from './admin/cinema-management.component/cinema-management.component';
 
 export const routes: Routes = [
     // --- Rotas Públicas ---
@@ -25,13 +30,24 @@ export const routes: Routes = [
     { path: 'meus-pedidos', component: OrderHistoryComponent, canActivate: [authGuard] },
     { path: 'perfil', component: ProfileComponent, canActivate: [authGuard] },
 
-    // // --- Rotas de Admin (acessível por ADMIN e MASTER) ---
-    // {
-    //     path: 'admin/gerir-filmes',
-    //     // loadComponent: () => import('./admin/movie-management/movie-management.component').then(c => c.MovieManagementComponent),
-    //     canActivate: [authGuard, adminGuard]
-    // },
-
+    // Rotas de Admin (acessível por ADMIN e MASTER)
+    {
+        path: 'admin/gerir-filmes',
+        component: MovieManagementComponent,
+        canActivate: [authGuard, adminGuard]
+    },
+    {
+        path: 'admin/gerir-sessoes',
+        component: SessionManagementComponent,
+        canActivate: [authGuard, adminGuard]
+    },
+    
+    // --- Rotas de Master (acessível APENAS por MASTER) ---
+    {
+        path: 'master/gerir-cinemas', // Nova rota
+        component: CinemaManagementComponent,
+        canActivate: [authGuard, masterGuard]
+    },
     // // --- Rotas de Master (acessível APENAS por MASTER) ---
     // {
     //     path: 'master/dashboard-negocios',

@@ -11,7 +11,6 @@
   </div>
 
   
-  <!-- Secção de Perfil (visível apenas quando logado) -->
   <div class="profile-section" *ngIf="authService.isAuthenticated()">
     <img [src]="authService.currentUser()?.avatarUrl" alt="Avatar do utilizador" class="profile-avatar">
     <div class="profile-info">
@@ -23,7 +22,6 @@
 
   <nav class="menu">
     <ul class="nav-links">
-      <!-- Links que aparecem para todos -->
       <li>
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           <span class="material-icons">theaters</span>
@@ -31,7 +29,6 @@
         </a>
       </li>
       
-      <!-- Links que só aparecem se o utilizador estiver logado -->
       <li *ngIf="authService.isAuthenticated()">
         <a routerLink="/meus-pedidos" routerLinkActive="active">
           <span class="material-icons">receipt_long</span>
@@ -39,25 +36,39 @@
         </a>
       </li>
 
-      <!-- Link para o painel de admin (ADMIN ou MASTER) -->
-      <li *ngIf="authService.isAdmin()">
-        <a routerLink="/admin/gerir-filmes" routerLinkActive="active">
-          <span class="material-icons">movie_edit</span>
-          <span class="nav-text">Gerir Filmes</span>
-        </a>
-      </li>
+      <ng-container *ngIf="authService.isAdmin()">
+        <li>
+          <a routerLink="/admin/gerir-filmes" routerLinkActive="active">
+            <span class="material-icons">movie_edit</span>
+            <span class="nav-text">Gerir Filmes</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/gerir-sessoes" routerLinkActive="active">
+            <span class="material-icons">schedule</span>
+            <span class="nav-text">Gerir Sessões</span>
+          </a>
+        </li>
+      </ng-container>
 
-      <!-- Links apenas para MASTER -->
-      <li *ngIf="authService.isMaster()">
-        <a routerLink="/master/dashboard-negocios" routerLinkActive="active">
-          <span class="material-icons">bar_chart</span>
-          <span class="nav-text">Dashboard</span>
-        </a>
-      </li>
+
+       <ng-container *ngIf="authService.isMaster()">
+          <li>
+            <a routerLink="/master/gerir-cinemas" routerLinkActive="active">
+              <span class="material-icons">store</span>
+              <span class="nav-text">Gerir Cinemas</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/master/dashboard-negocios" routerLinkActive="active">
+              <span class="material-icons">bar_chart</span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+      </ng-container>
     </ul>
   </nav>
 
-  <!-- Secção de Login/Logout na base -->
   <div class="logout-section">
     <a *ngIf="authService.isAuthenticated()" (click)="authService.logout()">
       <span class="material-icons">logout</span>
