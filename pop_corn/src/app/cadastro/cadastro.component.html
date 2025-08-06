@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="left">
+    <h1 class="logo">Pop<img src="../assets/Logo_azul_vermelha_thin.png" width="80"><span class="logo_azul">Corn</span></h1>
+  </div>
+  <div class="right">
+    <div class="form-box">
+        <h2>Criar Conta</h2>
+        <input type="text" placeholder="Nome de Usuário" [(ngModel)]="nome" />
+        <input type="email" placeholder="Email" [(ngModel)]="email" />
+        <input type="password" placeholder="Senha" [(ngModel)]="senha" />
+        <input type="text" placeholder="CPF" [(ngModel)]="cpf" />
+
+        <button (click)="cadastrar()">Cadastrar</button>
+    </div>
+  </div>
+</div>

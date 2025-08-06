@@ -1,0 +1,115 @@
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+}
+
+.left {
+  flex: 1;
+  padding: 0 40px;
+}
+
+.logo {
+  font-size: 48px;
+  color: #ff4c4c; /* vermelho suave */
+
+  .logo_azul{
+    color: #336aff; /* vermelho suave */
+  }
+}
+
+
+
+.logo span {
+  color: #ffffff;
+}
+
+.descricao {
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  
+  .destaque_vermelho {
+    color: #ff4c4c; // vermelho suave
+    font-weight: bold;
+  }
+
+  .destaque_azul {
+    color: #336aff; // vermelho suave
+    font-weight: bold;
+  }
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  background-color: #fff;
+  color: black;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.card input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn.login {
+  background-color: #ff4c4c;
+  color: white;
+}
+
+.btn.criar {
+  background-color: #336aff;
+  color: white;
+}
+
+.card a {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #1877f2;
+  text-decoration: none;
+}
+
+.logo {
+  font-size: 100px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px; // espaço entre "Pop", imagem e "Corn"
+  color: #ff4c4c;
+
+  .logo-img {
+    height: 40px; // ajuste conforme o tamanho da imagem
+    vertical-align: middle;
+  }
+}

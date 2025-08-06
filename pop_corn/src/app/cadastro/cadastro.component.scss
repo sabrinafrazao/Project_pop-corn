@@ -1,0 +1,81 @@
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #121212;
+}
+
+.left {
+  flex: 1;
+  padding: 0 40px;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.form-box {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #e43c3c;
+    }
+  }
+}
+
+.logo {
+  font-size: 100px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px; // espaço entre "Pop", imagem e "Corn"
+  color: #ff4c4c;
+
+  .logo-img {
+    height: 40px; // ajuste conforme o tamanho da imagem
+    vertical-align: middle;
+  }
+
+  .logo_azul{
+    color: #336aff; /* vermelho suave */
+  }
+}
+

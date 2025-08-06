@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="left">
+    <h1 class="logo">Pop<img src="../assets/Logo_azul_vermelha_thin.png" width="80"><span class="logo_azul">Corn</span></h1>
+    <!--h1><img src="../assets/logo_junto.png" alt="Logo Pop&Corn" width="400"/></h1-->
+    <p class="descricao">Com grandes <span class="destaque_vermelho">COMBOS</span>, vem grandes oportunidades.</p>
+    <p class="descricao"> Mantenha seus ingressos por perto e sua <span class="destaque_azul">BEBIDA</span> mais perto ainda!</p>
+    <p class="descricao"> Apertem seus cintos. Nossas <span class="destaque_azul">PROMOÇÕES</span> estão turbulentas!</p>
+    <p class="descricao"> Afinal Pop&Corn é como uma caixa de <span class="destaque_vermelho">CHOCOLATES</span>: você nunca sabe o que vai encontrar.</p>
+  </div>
+  <div class="right">
+    <div class="card">
+      <input type="text" placeholder="Email ou telefone" [(ngModel)]="email" />
+      <input type="password" placeholder="Senha" [(ngModel)]="senha" />
+      <button class="btn login" >Entrar</button>
+      <a href="#">Esqueceu a senha?</a>
+      <hr />
+      <button class="btn criar" [routerLink]="['/cadastro']">Criar nova conta</button>
+    </div>
+  </div>
+</div>
