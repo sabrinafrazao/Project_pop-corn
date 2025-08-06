@@ -17,13 +17,15 @@ import { Session } from '../../cinemas/models/session.model';
   styleUrls: ['./session-management.component.scss']
 })
 export class SessionManagementComponent {
+  authService = inject(AbstractAuthService);
   private movieService = inject(AbstractMovieService);
   private cinemaService = inject(AbstractCinemaService);
-  private authService = inject(AbstractAuthService);
 
   isModalVisible = signal(false);
+  selectedCinemaId = signal<number | null>(null);
   selectedMovieId = signal<number | null>(null);
-  cinemaWithFilteredSessions = signal<Cinema | undefined>(undefined);
+  // CORREÇÃO: Este sinal agora armazena a estrutura de Cinema[] devolvida pelo serviço
+  cinemasWithFilteredSessions = signal<Cinema[]>([]);
   
   selectedRoomId: number | null = null;
   sessionTime: string = '';
@@ -32,32 +34,48 @@ export class SessionManagementComponent {
   allCinemas = this.cinemaService.cinemas;
 
   managedCinema = computed(() => {
-    const adminCinemaId = this.authService.currentUser()?.cinemaId;
-    if (!adminCinemaId) return undefined;
-    return this.allCinemas().find(c => c.id === adminCinemaId);
+    const cinemaId = this.selectedCinemaId();
+    if (!cinemaId) return undefined;
+    return this.allCinemas().find(c => c.id === cinemaId);
   });
   
-  constructor() {}
+  // Cinema filtrado que contém as sessões atuais para o filme selecionado
+  filteredCinema = computed(() => {
+    return this.cinemasWithFilteredSessions().find(c => c.id === this.managedCinema()?.id);
+  });
 
-  onMovieSelect(movieId: number | null): void {
+  constructor() {
+    if (!this.authService.isMaster()) {
+      this.selectedCinemaId.set(this.authService.currentUser()?.cinemaId ?? null);
+    }
+  }
+
+  onCinemaSelect(cinemaIdStr: string | null): void {
+    const cinemaId = cinemaIdStr ? +cinemaIdStr : null;
+    this.selectedCinemaId.set(cinemaId);
+    this.onMovieSelect(null);
+  }
+
+  // CORREÇÃO: O parâmetro agora é 'any' para aceitar o evento, e depois é convertido
+  onMovieSelect(movieIdValue: any | null): void {
+    const movieId = movieIdValue ? +movieIdValue : null;
+    this.selectedMovieId.set(movieId);
+
     if (!movieId) {
-      this.selectedMovieId.set(null);
-      this.cinemaWithFilteredSessions.set(undefined);
+      this.cinemasWithFilteredSessions.set([]); // Limpa a lista de sessões
       return;
     }
-    this.selectedMovieId.set(movieId);
-    
-    this.cinemaService.loadSessionsByMovie(movieId).subscribe(cinemasComSessoes => {
-      const adminCinema = cinemasComSessoes.find(c => c.id === this.managedCinema()?.id);
-      this.cinemaWithFilteredSessions.set(adminCinema);
+
+    this.cinemaService.loadSessionsByMovie(movieId).subscribe(cinemas => {
+      this.cinemasWithFilteredSessions.set(cinemas);
     });
   }
 
   getSessionsForRoom(room: Room): Session[] {
-    const filteredRoom = this.cinemaWithFilteredSessions()?.rooms.find(r => r.id === room.id);
+    // Procura a sala correspondente nos dados já filtrados
+    const filteredRoom = this.filteredCinema()?.rooms.find(r => r.id === room.id);
     return filteredRoom?.sessions || [];
-}
-
+  }
   
   selectedMovie = computed(() => {
     const movieId = this.selectedMovieId();
@@ -71,8 +89,8 @@ export class SessionManagementComponent {
   });
   
   openAddSessionModal(room: Room): void {
-    if (!this.selectedMovieId()) {
-      alert('Por favor, selecione um filme primeiro.');
+    if (!this.selectedMovieId() || !this.managedCinema()) {
+      alert('Por favor, selecione um cinema e um filme primeiro.');
       return;
     }
     this.selectedRoomId = room.id;
@@ -88,36 +106,21 @@ export class SessionManagementComponent {
   handleAddSession(form: NgForm): void {
     const movieId = this.selectedMovieId();
     const cinema = this.managedCinema();
-    if (form.invalid || !movieId || !this.selectedRoomId || !cinema) {
-      return;
-    }
+    if (form.invalid || !movieId || !this.selectedRoomId || !cinema) return;
     
-    const sessionData: Omit<Session, 'id' | 'seatMap'> = {
-        movieId: movieId,
-        time: this.sessionTime
-    };
+    const sessionData: Omit<Session, 'id' | 'seatMap'> = { movieId, time: this.sessionTime };
 
     this.cinemaService.addSession(cinema.id, this.selectedRoomId, sessionData)
-      .subscribe(result => {
-        if (result.success) {
-          console.log('Sessão adicionada:', result.data);
-          this.onMovieSelect(movieId);
-          this.closeModal();
-        }
-      });
+      .subscribe(() => this.onMovieSelect(movieId));
+    this.closeModal();
   }
 
   deleteSession(sessionId: number, roomId: number): void {
     const cinema = this.managedCinema();
     const movieId = this.selectedMovieId();
-    if (confirm('Tem certeza que deseja excluir esta sessão?') && cinema && movieId) {
+    if (confirm('Tem certeza?') && cinema && movieId) {
       this.cinemaService.deleteSession(cinema.id, roomId, sessionId)
-        .subscribe(result => {
-          if (result.success) {
-            console.log('Sessão removida.');
-            this.onMovieSelect(movieId);
-          }
-        });
+        .subscribe(() => this.onMovieSelect(movieId));
     }
   }
 }

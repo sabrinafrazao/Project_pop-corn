@@ -11,45 +11,53 @@ import { Room } from "../models/room.model";
 @Injectable()
 export class MockCinemaService extends AbstractCinemaService {
   
-  // Este sinal representa a lista completa e estável de todos os cinemas e as suas salas.
   override cinemas: WritableSignal<Cinema[]> = signal([]);
-  
   private _baseCinemas: Cinema[] = [];
   private _allSessions = new Map<number, Session>();
 
   constructor() {
     super();
     this._generateAllMockData();
-    // Carrega a lista completa de cinemas e salas no sinal. NUNCA MAIS SERÁ ALTERADA POR 'loadSessionsByMovie'.
-    this.cinemas.set(this._baseCinemas);
+    // CORREÇÃO: Usar cloneDeep para evitar problemas de referência
+    this.cinemas.set(cloneDeep(this._baseCinemas));
   }
 
-  // ===== MÉTODO CORRIGIDO: Agora devolve um Observable<Cinema[]> filtrado =====
+  // ===== LÓGICA DE FILTRAGEM CORRIGIDA E SIMPLIFICADA =====
   override loadSessionsByMovie(movieId: number): Observable<Cinema[]> {
     console.log(`Buscando sessões para o filme com ID: ${movieId}`);
     
-    // Clona a estrutura de cinemas para trabalhar numa cópia segura.
+    // 1. Cria uma cópia limpa da estrutura de cinemas
     const cinemasForMovie = cloneDeep(this._baseCinemas);
 
-    // Itera para popular apenas as sessões do filme relevante.
+    // 2. Itera sobre cada sala de cada cinema
     cinemasForMovie.forEach(cinema => {
       cinema.rooms.forEach(room => {
-        // A lógica aqui é complexa, mas garante que as sessões corretas são atribuídas
-        const originalRoom = this._baseCinemas.find(c => c.id === cinema.id)?.rooms.find(r => r.id === room.id);
-        if (originalRoom) {
-          room.sessions = originalRoom.sessions.filter(session => session.movieId === movieId);
-        } else {
-          room.sessions = [];
-        }
+        // 3. Substitui as sessões da sala APENAS pelas sessões que correspondem ao filmeId
+        room.sessions = room.sessions.filter(session => session.movieId === movieId);
       });
     });
 
-    // Filtra para retornar apenas os cinemas que acabaram com sessões após o filtro.
-    const finalCinemas = cinemasForMovie.filter(c => c.rooms.some(r => r.sessions.length > 0));
-    
-    return of(finalCinemas);
+    // 4. Retorna apenas os cinemas que têm salas com sessões para este filme
+    return of(cinemasForMovie.filter(c => c.rooms.some(r => r.sessions.length > 0)));
   }
   
+  // ===== LÓGICA DE ADICIONAR SESSÃO CORRIGIDA =====
+  override addSession(cinemaId: number, roomId: number, sessionData: Omit<Session, 'id' | 'seatMap'>): Observable<OperationResult<Session>> {
+    const newSession = this._generateSession(Date.now(), sessionData.movieId, sessionData.time, 8, 12);
+    
+    // Adiciona a nova sessão à estrutura de dados principal (_baseCinemas)
+    const cinema = this._baseCinemas.find(c => c.id === cinemaId);
+    const room = cinema?.rooms.find(r => r.id === roomId);
+    if (room) {
+        room.sessions.push(newSession);
+    }
+    
+    // Atualiza o sinal principal para que toda a aplicação veja a nova sessão
+    this.cinemas.set(cloneDeep(this._baseCinemas));
+
+    console.log("Sessão adicionada ao filme ID:", sessionData.movieId, newSession);
+    return of({ success: true, data: newSession, status: 201 });
+  }
   override getSessionDetails(sessionId: number): Observable<Session | undefined> {
     return of(this._allSessions.get(sessionId));
   }
@@ -123,6 +131,20 @@ export class MockCinemaService extends AbstractCinemaService {
     return of({ success: true, data: newRoom, status: 201 });
   }
 
+  // ===== NOVA IMPLEMENTAÇÃO DO MÉTODO updateRoom =====
+  override updateRoom(cinemaId: number, updatedRoom: Room): Observable<OperationResult<Room>> {
+    const cinema = this._baseCinemas.find(c => c.id === cinemaId);
+    if (cinema) {
+      const roomIndex = cinema.rooms.findIndex(r => r.id === updatedRoom.id);
+      if (roomIndex > -1) {
+        cinema.rooms[roomIndex] = updatedRoom;
+        this.cinemas.set(cloneDeep(this._baseCinemas)); // Atualiza o sinal principal
+        return of({ success: true, data: updatedRoom });
+      }
+    }
+    return of({ success: false, status: 404 });
+  }
+
   override deleteRoom(cinemaId: number, roomId: number): Observable<OperationResult<void>> {
     const cinema = this._baseCinemas.find(c => c.id === cinemaId);
     if (cinema) {
@@ -133,15 +155,7 @@ export class MockCinemaService extends AbstractCinemaService {
     return of({ success: false, status: 404 });
   }
 
-  override addSession(cinemaId: number, roomId: number, sessionData: Omit<Session, 'id' | 'seatMap'>): Observable<OperationResult<Session>> {
-    const newSession = this._generateSession(Date.now(), sessionData.movieId, sessionData.time, 8, 12);
-    const cinema = this._baseCinemas.find(c => c.id === cinemaId);
-    const room = cinema?.rooms.find(r => r.id === roomId);
-    if (room) {
-        room.sessions.push(newSession);
-    }
-    return of({ success: true, data: newSession, status: 201 });
-  }
+  
   
   override deleteSession(cinemaId: number, roomId: number, sessionId: number): Observable<OperationResult<void>> {
     this._allSessions.delete(sessionId);
