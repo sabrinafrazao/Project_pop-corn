@@ -9,7 +9,7 @@ import { Session } from '../../cinemas/models/session.model';
 
 export abstract class AbstractOrderService {
   // Estado do Pedido Ativo
-  abstract activeOrderContext: Signal<{ movie: Movie; session: Session; cinemaName: string; } | null>;
+  abstract activeOrderContext: Signal<{ movie: Movie; session: Session; cinemaName: string; cinemaId: number; } | null>;
   abstract selectedSeats: Signal<Seat[]>;
   abstract ticketOrder: Signal<TicketOrder[]>;
   abstract bomboniereOrder: Signal<BomboniereOrder[]>;
@@ -19,7 +19,7 @@ export abstract class AbstractOrderService {
   abstract completedOrders: Signal<FinalizedOrder[]>;
 
   // Métodos
-  abstract setOrderContext(movie: Movie, session: Session, cinemaName: string): void;
+  abstract setOrderContext(movie: Movie, session: Session, cinemaName: string, cinemaId: number): void;
   abstract setTickets(seats: Seat[], tickets: TicketOrder[]): void;
   abstract updateBomboniereOrder(productId: number, quantity: number, product: BomboniereProduct): void;
   abstract finalizeOrder(cpf: string): FinalizedOrder;

@@ -299,3 +299,34 @@ $color-success: #48BB78; // Um verde para sucesso, se necessário
         cursor: not-allowed;
     }
 }
+// Adicione no final do ficheiro
+.summary-item.movie-details {
+  display: flex; // Usa flexbox para alinhar
+  align-items: flex-start; // Alinha os itens ao topo
+  gap: 1rem; // Espaço entre a imagem e o texto
+
+  .summary-poster {
+    width: 60px; // Largura fixa
+    height: 90px; // Altura fixa
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0; // Impede que a imagem encolha
+  }
+
+  div {
+    display: flex;
+    flex-direction: column; // Empilha o texto verticalmente
+    gap: 0.25rem;
+
+    strong {
+      color: #FFFFFF; // $color-text-primary
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    span {
+      font-size: 0.85rem;
+      color: #A0AEC0; // $color-text-secondary
+    }
+  }
+}

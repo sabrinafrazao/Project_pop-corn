@@ -1,6 +1,6 @@
-import { Component, Signal, inject } from '@angular/core';
+import { Component, Signal, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router'; 
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Movie } from '../models/movies.model';
 import { Cinema } from '../../cinemas/models/cinema.model';
@@ -19,7 +19,6 @@ import { AbstractOrderService } from '../../order/services/abstract-order.servic
   styleUrls: ['./movie-details.component.scss']
 })
 export class MovieDetailsComponent {
-  // Injeção de dependências
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
@@ -29,33 +28,34 @@ export class MovieDetailsComponent {
   private orderService = inject(AbstractOrderService);
 
   movie: Movie | undefined;
-  cinemas: Signal<Cinema[]>;
+  // Sinal local para guardar os cinemas com as sessões já filtradas para este filme.
+  cinemasWithSessions = signal<Cinema[]>([]);
 
   constructor() {
-    this.cinemas = this.cinemaService.cinemas;
-
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const id = +idParam;
       
       this.movie = this.movieService.movies().find(m => m.id === id);
       if (this.movie) {
-        this.cinemaService.loadSessionsByMovie(id);
+        // Pede ao serviço a lista de cinemas que têm sessões para este filme
+        this.cinemaService.loadSessionsByMovie(id).subscribe(cinemas => {
+          this.cinemasWithSessions.set(cinemas);
+        });
       }
     }
   }
 
-  selectSession(session: Session, cinemaName: string): void {
-    // Primeiro, verifica se o utilizador está logado
+  // A função agora espera receber o objeto Cinema completo para poder passar o ID
+  selectSession(session: Session, cinema: Cinema): void {
     if (!this.authService.isAuthenticated()) {
-      // Se não estiver, redireciona para o login e guarda a página atual para voltar depois
       this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
 
-    // Se estiver logado, guarda o contexto do pedido e navega para a reserva
     if (this.movie) {
-      this.orderService.setOrderContext(this.movie, session, cinemaName);
+      // Passa o ID do cinema para o serviço de pedidos
+      this.orderService.setOrderContext(this.movie, session, cinema.name, cinema.id);
       this.router.navigate(['/booking', session.id]);
     } else {
       console.error("Filme não encontrado, não é possível prosseguir para a reserva.");

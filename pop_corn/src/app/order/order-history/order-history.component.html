@@ -1,14 +1,33 @@
 <div class="page-container">
   <h1>Meus Pedidos</h1>
 
-  <div class="no-orders" *ngIf="myOrders().length === 0">
-    <p>Você ainda não fez nenhum pedido.</p>
+  <div class="filters-container" *ngIf="authService.isAdmin()">
+    
+    <div class="form-group" *ngIf="authService.isMaster()">
+      <label for="cinema-filter">Filtrar por Cinema</label>
+      <select id="cinema-filter" (change)="filterByCinemaId.set($any($event.target).value)">
+        <option value="all">Todos os Cinemas</option>
+        <option *ngFor="let cinema of allCinemas()" [value]="cinema.id">{{ cinema.name }}</option>
+      </select>
+    </div>
+
+    <div class="form-group" *ngIf="!authService.isMaster()">
+      <label for="movie-filter">Filtrar por Filme</label>
+      <select id="movie-filter" (change)="filterByMovieTitle.set($any($event.target).value)">
+        <option value="all">Todos os Filmes</option>
+        <option *ngFor="let title of movieTitlesInOrders()" [value]="title">{{ title }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="no-orders" *ngIf="displayedOrders().length === 0">
+    <p>Nenhum pedido encontrado com os filtros atuais.</p>
     <button (click)="router.navigate(['/'])">Ver filmes em cartaz</button>
   </div>
 
-  <div class="orders-list" *ngIf="myOrders().length > 0">
-    <div class="order-card" *ngFor="let order of myOrders()">
-      <!-- CABEÇALHO DO PEDIDO - AGORA COMPLETO -->
+  <div class="orders-list" *ngIf="displayedOrders().length > 0">
+    <div class="order-card" *ngFor="let order of displayedOrders()">
+      
       <div class="order-header" (click)="toggleOrderDetails(order.orderId)">
         <div>
           <span class="order-id">Pedido: {{ order.orderId }}</span>
@@ -19,7 +38,6 @@
         </span>
       </div>
       
-      <!-- Detalhes Expansíveis -->
       <div class="order-details" *ngIf="expandedOrderId() === order.orderId">
         <div class="movie-info">
           <img [src]="order.movieImage" [alt]="order.movieTitle" class="movie-poster">
@@ -29,12 +47,10 @@
             <p>Sessão: {{ order.sessionTime }}</p>
           </div>
         </div>
-
         <div class="details-section">
           <h5>Ingressos ({{ getTicketCount(order.ticketOrder) }})</h5>
           <p>Lugares: {{ getSeatsText(order.selectedSeats) }}</p>
         </div>
-
         <div class="details-section" *ngIf="order.bomboniereOrder.length > 0">
           <h5>Bomboniere ({{ getBomboniereCount(order.bomboniereOrder) }})</h5>
           <ul>
@@ -45,7 +61,6 @@
         </div>
       </div>
 
-      <!-- RODAPÉ DO PEDIDO - AGORA COMPLETO -->
       <div class="order-footer">
         <div class="total-price">
             <span>TOTAL</span>

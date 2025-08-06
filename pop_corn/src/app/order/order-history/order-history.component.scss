@@ -208,3 +208,34 @@ $color-border: #2D3748;
       }
   }
 }
+
+// Adicione no final do ficheiro
+.filters-container {
+  display: flex;
+  gap: 1.5rem;
+  background-color: #1E1E1E; // $color-surface
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+
+  label {
+    font-size: 0.9rem;
+    color: #A0AEC0; // $color-text-secondary;
+  }
+
+  select {
+    padding: 0.75rem;
+    background-color: #121212; // $color-background;
+    border: 1px solid #2D3748; // $color-border;
+    border-radius: 8px;
+    color: #FFFFFF; // $color-text-primary;
+    font-size: 1rem;
+  }
+}

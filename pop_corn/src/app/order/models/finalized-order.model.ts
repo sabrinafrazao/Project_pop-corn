@@ -9,7 +9,9 @@ export interface FinalizedOrder {
   cpf: string;
   totalPrice: number;
   
-  // Detalhes do pedido adicionados
+  userId: string;
+  cinemaId: number;
+
   movieTitle: string;
   movieImage: string;
   cinemaName: string;
@@ -19,7 +21,6 @@ export interface FinalizedOrder {
   ticketOrder: TicketOrder[];
   bomboniereOrder: BomboniereOrder[];
 
-  // Detalhes do PIX
   pixQrCode: string;
   pixCopyPaste: string;
 }

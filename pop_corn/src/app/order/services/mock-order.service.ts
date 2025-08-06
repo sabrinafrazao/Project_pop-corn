@@ -1,4 +1,3 @@
-// src/app/order/services/mock-order.service.ts
 import { Injectable, signal, computed, effect, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AbstractOrderService } from './abstract-order.service';
@@ -8,14 +7,16 @@ import { Session } from '../../cinemas/models/session.model';
 import { Seat } from '../../cinemas/models/seat.model';
 import { Order as TicketOrder } from '../../booking/models/ticket.model';
 import { BomboniereOrder, BomboniereProduct } from '../../bomboniere/models/bomboniere.model';
+import { AbstractAuthService } from '../../auth/services/abstract-auth.service';
 
 @Injectable()
 export class MockOrderService implements AbstractOrderService {
   private platformId = inject(PLATFORM_ID);
+  private authService = inject(AbstractAuthService); // Injetar
   private readonly STORAGE_KEY = 'popCornOrders';
 
   // Estado do Pedido Ativo
-  activeOrderContext = signal<{ movie: Movie; session: Session; cinemaName: string; } | null>(null);
+  activeOrderContext = signal<{ movie: Movie; session: Session; cinemaName: string; cinemaId: number; } | null>(null);
   selectedSeats = signal<Seat[]>([]);
   ticketOrder = signal<TicketOrder[]>([]);
   bomboniereOrder = signal<BomboniereOrder[]>([]);
@@ -35,8 +36,8 @@ export class MockOrderService implements AbstractOrderService {
     }
   }
   
-  setOrderContext(movie: Movie, session: Session, cinemaName: string): void {
-    this.activeOrderContext.set({ movie, session, cinemaName });
+  setOrderContext(movie: Movie, session: Session, cinemaName: string, cinemaId: number): void {
+    this.activeOrderContext.set({ movie, session, cinemaName, cinemaId });
   }
 
   setTickets(seats: Seat[], tickets: TicketOrder[]): void {
@@ -60,10 +61,13 @@ export class MockOrderService implements AbstractOrderService {
     });
   }
 
+  
   finalizeOrder(cpf: string): FinalizedOrder {
     const context = this.activeOrderContext();
-    if (!context) {
-      throw new Error("Contexto do pedido ativo não encontrado para finalização.");
+    const currentUser = this.authService.currentUser();
+
+    if (!context || !currentUser) {
+      throw new Error("Contexto do pedido ou utilizador não encontrado para finalização.");
     }
 
     const newFinalizedOrder: FinalizedOrder = {
@@ -72,7 +76,11 @@ export class MockOrderService implements AbstractOrderService {
       status: 'Aguardando Pagamento',
       cpf,
       totalPrice: this.totalPrice(),
-      // Detalhes do pedido
+      
+      // ===== DADOS DE ASSOCIAÇÃO ADICIONADOS =====
+      userId: currentUser.id,
+      cinemaId: context.cinemaId,  // Assumindo que o ID da sessão pode identificar o cinema
+
       movieTitle: context.movie.title,
       movieImage: context.movie.image,
       cinemaName: context.cinemaName,
@@ -80,7 +88,6 @@ export class MockOrderService implements AbstractOrderService {
       selectedSeats: this.selectedSeats(),
       ticketOrder: this.ticketOrder(),
       bomboniereOrder: this.bomboniereOrder(),
-      // Detalhes do PIX
       pixQrCode: 'assets/images/fake-qr-code.png',
       pixCopyPaste: Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2)
     };

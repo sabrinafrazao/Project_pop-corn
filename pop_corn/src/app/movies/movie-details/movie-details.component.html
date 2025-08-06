@@ -21,27 +21,24 @@
         </div>
     </div>
 
-    <div class="session-filters">
-        </div>
+    <div class="session-filters"></div>
 
     <div class="cinema-list">
-        <div class="cinema-group" *ngFor="let cinema of cinemas()">
-        <h2>{{ cinema.name }}</h2>
-        
-        <div class="room" *ngFor="let room of cinema.rooms">
-            <p>
-            {{ room.name }}
-            <span> • {{ room.type }} • {{ room.sound }}<span *ngIf="room.technology"> • {{ room.technology }}</span></span>
-            </p>
-            <div class="session-times">
-            <!-- CORREÇÃO: Passa o nome do cinema para a função -->
-            <button class="session-time" 
-                    *ngFor="let session of room.sessions" 
-                    (click)="selectSession(session, cinema.name)">
-                {{ session.time }}
-            </button>
+        <div class="cinema-group" *ngFor="let cinema of cinemasWithSessions()">
+            <h2>{{ cinema.name }}</h2>
+            <div class="room" *ngFor="let room of cinema.rooms">
+                <p>
+                {{ room.name }}
+                <span> • {{ room.type }} • {{ room.sound }}<span *ngIf="room.technology"> • {{ room.technology }}</span></span>
+                </p>
+                <div class="session-times">
+                    <button class="session-time" 
+                            *ngFor="let session of room.sessions" 
+                            (click)="selectSession(session, cinema)">
+                        {{ session.time }}
+                    </button>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </div>
