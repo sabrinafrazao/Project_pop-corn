@@ -10,7 +10,6 @@ $color-border: #2D3748;
 $color-danger: #E53E3E;
 $color-success: #48BB78;
 
-// Estilos do Container Principal
 .management-container {
   padding: 2rem;
   color: $color-text-primary;
@@ -21,8 +20,7 @@ $color-success: #48BB78;
   }
 }
 
-// Botão Adicionar (reutilizado de movie-management)
-.add-button {
+.add-button, .add-room-button {
   background-color: $color-highlight;
   color: $color-background;
   border: none;
@@ -30,7 +28,6 @@ $color-success: #48BB78;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: 2rem;
   transition: background-color 0.2s;
 
   &:hover {
@@ -38,45 +35,94 @@ $color-success: #48BB78;
   }
 }
 
-// Tabela de Cinemas
-.cinema-table {
+.add-button {
+  margin-bottom: 2rem;
+}
+
+.cinema-card {
   background-color: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+}
+
+.cinema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $color-border;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+    color: $color-highlight;
+  }
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.room-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: color.adjust($color-surface, $lightness: 5%);
+  padding: 1rem;
   border-radius: 8px;
-  overflow: hidden;
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
+.room-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
 
-    th, td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid $color-border;
-    }
+.room-details {
+  color: $color-text-secondary;
+  margin-left: 1rem;
+}
 
-    th {
-      background-color: color.adjust($color-surface, $lightness: -5%);
-      font-weight: bold;
-    }
+.no-rooms {
+  color: $color-text-secondary;
+  font-style: italic;
+  padding: 1rem;
+}
 
-    tbody tr:hover {
-      background-color: color.adjust($color-surface, $lightness: 5%);
-    }
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
 
-    .action-buttons {
-      display: flex;
-      gap: 0.5rem;
+.edit-button, .delete-button {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
 
-       .delete-button {
-        background-color: $color-danger;
-        color: $color-text-primary;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-      }
-    }
+.edit-button {
+  background-color: transparent;
+  border: 1px solid $color-text-secondary;
+  color: $color-text-secondary;
+  &:hover {
+    background-color: $color-text-secondary;
+    color: $color-surface;
+  }
+}
+
+.delete-button {
+  background-color: transparent;
+  border: 1px solid $color-danger;
+  color: $color-danger;
+  &:hover {
+    background-color: $color-danger;
+    color: white;
   }
 }
 
@@ -89,8 +135,7 @@ $color-success: #48BB78;
   font-size: 0.9rem;
 }
 
-
-// Estilos do Modal (reutilizado de movie-management)
+// Estilos do Modal (genéricos)
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -112,20 +157,10 @@ $color-success: #48BB78;
   max-width: 500px;
   border: 1px solid $color-border;
 
-  h2 {
-    margin-top: 0;
-    margin-bottom: 2rem;
-  }
-
+  h2 { margin-top: 0; margin-bottom: 2rem; }
   .form-group {
     margin-bottom: 1.5rem;
-
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: $color-text-secondary;
-    }
-
+    label { display: block; margin-bottom: 0.5rem; color: $color-text-secondary; }
     input, select {
       width: 100%;
       padding: 0.75rem;
@@ -135,33 +170,25 @@ $color-success: #48BB78;
       color: $color-text-primary;
       font-size: 1rem;
       box-sizing: border-box;
-
-      &:focus {
-        outline: none;
-        border-color: $color-highlight;
-      }
+      &:focus { outline: none; border-color: $color-highlight; }
     }
   }
-
   .modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     margin-top: 2rem;
-
     button {
        padding: 0.75rem 1.5rem;
        border-radius: 8px;
        font-weight: bold;
        cursor: pointer;
     }
-
     .cancel-button {
         background-color: transparent;
         border: 1px solid $color-text-secondary;
         color: $color-text-secondary;
     }
-
     .save-button {
         background-color: $color-success;
         border: none;

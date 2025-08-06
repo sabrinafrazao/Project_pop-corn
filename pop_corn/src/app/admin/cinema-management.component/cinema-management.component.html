@@ -1,32 +1,58 @@
 <div class="management-container">
   <h1>Gerenciamento de Cinemas</h1>
   <button class="add-button" (click)="openAddCinemaModal()">Adicionar Novo Cinema</button>
+  <div class="cinema-list">
+    <div class="cinema-card" *ngFor="let cinema of cinemas()">
+      <div class="cinema-header">
+        <h2>{{ cinema.name }}</h2>
+        <button class="add-room-button" (click)="openAddRoomModal(cinema)">+ Adicionar Sala</button>
+      </div>
 
-  <div class="cinema-table">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome do Cinema</th>
-          <th>Nº de Salas</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cinema of cinemas()">
-          <td>{{ cinema.id }}</td>
-          <td>{{ cinema.name }}</td>
-          <td>{{ cinema.rooms.length }}</td>
-          <td class="action-buttons">
-            <button class="delete-button" (click)="deleteCinema(cinema.id)">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="help-text">
-      <strong>Nota:</strong> A funcionalidade de atribuir um cinema a um admin é simulada. No ambiente real,
-      haveria um painel de "Gerir Usuários" para fazer essa ligação.
-    </p>
+      <div class="room-list">
+        <div class="room-item" *ngFor="let room of cinema.rooms">
+          <div class="room-info">
+            <span class="room-name">{{ room.name }}</span>
+            <span class="room-details">{{ room.type }} - {{ room.sound }} <span *ngIf="room.technology">- {{room.technology}}</span></span>
+          </div>
+          <div class="action-buttons">
+            <button class="edit-button" (click)="openEditRoomModal(cinema, room)">Editar</button>
+            <button class="delete-button" (click)="deleteRoom(cinema.id, room.id)">Excluir</button>
+          </div>
+        </div>
+        <p *ngIf="cinema.rooms.length === 0" class="no-rooms">Nenhuma sala cadastrada para este cinema.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isRoomModalVisible()">
+  <div class="modal-content">
+    <h2>{{ modalMode() === 'add' ? 'Adicionar Sala' : 'Editar Sala' }} em "{{ selectedCinemaForModal()?.name }}"</h2>
+
+    <form #roomForm="ngForm" (ngSubmit)="handleRoomSubmit(roomForm)">
+      <div class="form-group">
+        <label for="roomName">Nome da Sala</label>
+        <input type="text" id="roomName" name="name" [(ngModel)]="currentRoomForForm.name" required>
+      </div>
+      <div class="form-group">
+        <label for="roomType">Tipo</label>
+        <select id="roomType" name="type" [(ngModel)]="currentRoomForForm.type">
+          <option value="2D">2D</option>
+          <option value="3D">3D</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="roomSound">Som</label>
+        <select id="roomSound" name="sound" [(ngModel)]="currentRoomForForm.sound">
+          <option value="Dublado">Dublado</option>
+          <option value="Legendado">Legendado</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-button" (click)="closeRoomModal()">Cancelar</button>
+        <button type="submit" class="save-button" [disabled]="roomForm.invalid">Salvar</button>
+      </div>
+    </form>
   </div>
 </div>
 
