@@ -39,13 +39,18 @@ $transition-speed: 0.3s;
   margin-bottom: 2rem;
 
   .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: $color-text-primary;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: opacity 0.2s 0.1s;
+  display: block; /* Garante que a tag 'a' se comporta como um bloco para aplicar largura e altura */
+  // Adicione ou ajuste a largura máxima conforme necessário
+  max-width: 130px;
+  height: auto; /* Mantém a proporção da imagem */
+
+  img {
+    display: block; /* Remove espaçamento extra abaixo da imagem */
+    width: 100%; /* Faz a imagem ocupar a largura do seu contêiner (.logo) */
+    height: auto; /* Mantém a proporção da imagem */
   }
+}
+
 
   .toggle-button {
     background: none;
@@ -181,7 +186,7 @@ $transition-speed: 0.3s;
     margin-bottom: 1rem;
     padding: 1rem 0;
   }
-
+  
   .toggle-button {
     display: flex;
     align-items: center;
