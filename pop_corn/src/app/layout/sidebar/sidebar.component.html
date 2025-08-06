@@ -2,7 +2,9 @@
 
 <aside class="sidebar">
   <div class="sidebar-header">
-    <a routerLink="/" class="logo">Pop&Corn</a>
+    <a routerLink="/" class="logo">
+      <img src="assets/images/logo.png" alt="Pop&Corn Logo">
+    </a>
     <button class="toggle-button" (click)="toggleSidebar()">
       <span class="material-icons">
         {{ isCollapsed() ? 'menu' : 'menu_open' }}
@@ -37,12 +39,7 @@
       </li>
 
       <ng-container *ngIf="authService.isAdmin()">
-        <li>
-          <a routerLink="/admin/gerir-filmes" routerLinkActive="active">
-            <span class="material-icons">movie_edit</span>
-            <span class="nav-text">Gerir Filmes</span>
-          </a>
-        </li>
+
         <li>
           <a routerLink="/admin/gerir-sessoes" routerLinkActive="active">
             <span class="material-icons">schedule</span>
@@ -53,18 +50,31 @@
 
 
        <ng-container *ngIf="authService.isMaster()">
-          <li>
+        <li>
+          <a routerLink="/admin/gerir-filmes" routerLinkActive="active">
+            <span class="material-icons">movie_edit</span>
+            <span class="nav-text">Gerir Filmes</span>
+          </a>
+        </li>  
+        <li>
             <a routerLink="/master/gerir-cinemas" routerLinkActive="active">
               <span class="material-icons">store</span>
               <span class="nav-text">Gerir Cinemas</span>
             </a>
           </li>
           <li>
-            <a routerLink="/master/dashboard-negocios" routerLinkActive="active">
+            <a routerLink="/master/gerir-admins" routerLinkActive="active"> 
+              <span class="material-icons">manage_accounts</span>
+              <span class="nav-text">Gerir Admins</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/master/dashboard" routerLinkActive="active">
               <span class="material-icons">bar_chart</span>
               <span class="nav-text">Dashboard</span>
             </a>
           </li>
+          
       </ng-container>
     </ul>
   </nav>

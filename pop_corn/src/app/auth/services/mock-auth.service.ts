@@ -3,84 +3,92 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { AbstractAuthService } from './abstract-auth.service';
+import { of, Observable } from 'rxjs';
+import { OperationResult } from '../../models/operation-result.model';
 
 // ===== 1. CONSTANTES DOS USUÁRIOS DE TESTE =====
-// Defina os três perfis de usuário aqui.
+const DEV_USER: User = { id: '101', name: 'Usuário Padrão', email: 'user@test.com', role: 'USER', avatarUrl: 'https://placehold.co/100x100/FFFFFF/000000?text=U' };
+const DEV_ADMIN: User = { id: '998', name: 'Dev Admin', email: 'admin@dev.com', role: 'ADMIN', avatarUrl: 'https://placehold.co/100x100/4A5568/FFFFFF?text=A', cinemaId: 1 };
+const DEV_ADMIN_2: User = { id: '997', name: 'Admin Sem Cinema', email: 'admin2@dev.com', role: 'ADMIN', avatarUrl: 'https://placehold.co/100x100/4A5568/FFFFFF?text=A' };
+const DEV_MASTER: User = { id: '999', name: 'Dev Master', email: 'master@dev.com', role: 'MASTER', avatarUrl: 'https://placehold.co/100x100/FFC800/000000?text=M', cinemaId: 2 };
 
-const DEV_USER: User = {
-  id: '101',
-  name: 'Usuário Padrão',
-  email: 'user@test.com',
-  role: 'USER',
-  avatarUrl: 'https://placehold.co/100x100/FFFFFF/000000?text=U'
-  // Sem cinemaId para um usuário comum
-};
-
-const DEV_ADMIN: User = {
-  id: '998',
-  name: 'Dev Admin',
-  email: 'admin@dev.com',
-  role: 'ADMIN',
-  avatarUrl: 'https://placehold.co/100x100/4A5568/FFFFFF?text=A',
-  cinemaId: 1 // Gerencia o cinema "Centerplex"
-};
-
-const DEV_MASTER: User = {
-  id: '999',
-  name: 'Dev Master',
-  email: 'master@dev.com',
-  role: 'MASTER',
-  avatarUrl: 'https://placehold.co/100x100/FFC800/000000?text=M',
-  cinemaId: 2 // Gerencia o cinema "Cinépolis"
-};
-
+const USERS_DB: User[] = [DEV_USER, DEV_ADMIN, DEV_ADMIN_2, DEV_MASTER];
 
 @Injectable()
-export class MockAuthService implements AbstractAuthService {
+export class MockAuthService extends AbstractAuthService {
   private platformId = inject(PLATFORM_ID);
+  
+  private _users = signal<User[]>(USERS_DB);
 
-  currentUser = signal<User | null>(null);
-  isAuthenticated = computed(() => !!this.currentUser());
-  isAdmin = computed(() => this.currentUser()?.role === 'ADMIN' || this.currentUser()?.role === 'MASTER');
-  isMaster = computed(() => this.currentUser()?.role === 'MASTER');
+  override currentUser = signal<User | null>(null);
+  override allUsers = computed(() => this._users());
+  override isAuthenticated = computed(() => !!this.currentUser());
+  override isAdmin = computed(() => this.currentUser()?.role === 'ADMIN' || this.currentUser()?.role === 'MASTER');
+  override isMaster = computed(() => this.currentUser()?.role === 'MASTER');
 
   constructor(private router: Router) {
+    super(); // CORREÇÃO: Adiciona a chamada `super()` que faltava
     if (isPlatformBrowser(this.platformId)) {
       const userJson = localStorage.getItem('popcorn_user');
       if (userJson) {
         this.currentUser.set(JSON.parse(userJson));
       } else {
-        
-        // ===== 2. PONTO DE TROCA =====
-        // Para alternar o usuário padrão, simplesmente troque a constante abaixo.
-        // Opções: DEV_USER, DEV_ADMIN, DEV_MASTER
+        // ===== PONTO DE TROCA (como você prefere) =====
         const defaultUser = DEV_MASTER;
-        // ==============================
-
+        // ===============================================
         localStorage.setItem('popcorn_user', JSON.stringify(defaultUser));
         this.currentUser.set(defaultUser);
       }
     }
   }
 
-  login(email: string, password: string) {
-    let userToLogin: User;
-    if (email.startsWith('admin@')) {
-      userToLogin = DEV_ADMIN;
-    } else if (email.startsWith('master@')) {
-      userToLogin = DEV_MASTER;
-    } else {
-      userToLogin = DEV_USER;
+  // ===== NOVA IMPLEMENTAÇÃO DO MÉTODO addUser =====
+  override addUser(userData: Omit<User, 'id'>): Observable<OperationResult<User>> {
+    const newUser: User = {
+      ...userData,
+      id: `user-${Date.now()}` // Cria um ID único
+    };
+    this._users.update(users => [...users, newUser]);
+    console.log("Novo utilizador adicionado:", newUser);
+    return of({ success: true, data: newUser });
+  }
+  
+  override updateUser(updatedUser: User): Observable<OperationResult> {
+    this._users.update(users => 
+        users.map(user => user.id === updatedUser.id ? { ...user, ...updatedUser } : user)
+    );
+    
+    if (this.currentUser()?.id === updatedUser.id) {
+        const userWithPasswordRemoved = { ...updatedUser };
+        delete userWithPasswordRemoved.password; // Remove a senha antes de guardar
+        localStorage.setItem('popcorn_user', JSON.stringify(userWithPasswordRemoved));
+        this.currentUser.set(userWithPasswordRemoved);
     }
-
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('popcorn_user', JSON.stringify(userToLogin));
-    }
-    this.currentUser.set(userToLogin);
-    this.router.navigate(['/']);
+    
+    console.log("Base de dados de utilizadores atualizada:", this._users());
+    return of({ success: true, data: updatedUser });
   }
 
-  logout() {
+  override login(email: string, password: string) {
+    let userToLogin: User | undefined;
+    if (email.startsWith('admin@')) {
+      userToLogin = this._users().find(u => u.email === 'admin@dev.com');
+    } else if (email.startsWith('master@')) {
+      userToLogin = this._users().find(u => u.email === 'master@dev.com');
+    } else {
+      userToLogin = this._users().find(u => u.role === 'USER');
+    }
+
+    if (userToLogin) {
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.setItem('popcorn_user', JSON.stringify(userToLogin));
+      }
+      this.currentUser.set(userToLogin);
+      this.router.navigate(['/']);
+    }
+  }
+
+  override logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('popcorn_user');
     }

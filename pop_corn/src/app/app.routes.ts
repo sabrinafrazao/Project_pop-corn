@@ -16,6 +16,8 @@ import { MovieManagementComponent } from './admin/movie-management.component/mov
 import { SessionManagementComponent } from './admin/session-management.component/session-management.component';
 
 import { CinemaManagementComponent } from './admin/cinema-management.component/cinema-management.component';
+import { UserManagementComponent } from './admin/user-management.component/user-management.component';
+import { DashboardComponent } from './master/dashboard/dashboard.component'; // Importe o novo componente
 
 export const routes: Routes = [
     // --- Rotas Públicas ---
@@ -31,34 +33,13 @@ export const routes: Routes = [
     { path: 'perfil', component: ProfileComponent, canActivate: [authGuard] },
 
     // Rotas de Admin (acessível por ADMIN e MASTER)
-    {
-        path: 'admin/gerir-filmes',
-        component: MovieManagementComponent,
-        canActivate: [authGuard, adminGuard]
-    },
-    {
-        path: 'admin/gerir-sessoes',
-        component: SessionManagementComponent,
-        canActivate: [authGuard, adminGuard]
-    },
+    { path: 'admin/gerir-sessoes', component: SessionManagementComponent, canActivate: [authGuard, adminGuard]},
     
     // --- Rotas de Master (acessível APENAS por MASTER) ---
-    {
-        path: 'master/gerir-cinemas', // Nova rota
-        component: CinemaManagementComponent,
-        canActivate: [authGuard, masterGuard]
-    },
-    // // --- Rotas de Master (acessível APENAS por MASTER) ---
-    // {
-    //     path: 'master/dashboard-negocios',
-    //     // loadComponent: () => import('./master/dashboard/dashboard.component').then(c => c.DashboardComponent),
-    //     canActivate: [authGuard, masterGuard]
-    // },
-    // {
-    //     path: 'master/gerir-admins',
-    //     // loadComponent: () => import('./master/user-management/user-management.component').then(c => c.UserManagementComponent),
-    //     canActivate: [authGuard, masterGuard]
-    // },
+    { path: 'master/gerir-cinemas', component: CinemaManagementComponent, canActivate: [authGuard, masterGuard]},
+    { path: 'admin/gerir-filmes', component: MovieManagementComponent, canActivate: [authGuard, masterGuard]},
+    { path: 'master/gerir-admins', component: UserManagementComponent, canActivate: [authGuard, masterGuard] }, // NOVA ROTA
+    { path: 'master/dashboard', component: DashboardComponent, canActivate: [authGuard, masterGuard] },
 
     // --- Rota de Fallback ---
     { path: '**', redirectTo: '', pathMatch: 'full' }
