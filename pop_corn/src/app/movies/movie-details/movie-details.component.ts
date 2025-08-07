@@ -28,17 +28,15 @@ export class MovieDetailsComponent {
   private orderService = inject(AbstractOrderService);
 
   movie: Movie | undefined;
-  // Sinal local para guardar os cinemas com as sessões já filtradas para este filme.
   cinemasWithSessions = signal<Cinema[]>([]);
 
   constructor() {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const id = +idParam;
-      
+
       this.movie = this.movieService.movies().find(m => m.id === id);
       if (this.movie) {
-        // Pede ao serviço a lista de cinemas que têm sessões para este filme
         this.cinemaService.loadSessionsByMovie(id).subscribe(cinemas => {
           this.cinemasWithSessions.set(cinemas);
         });
@@ -46,7 +44,6 @@ export class MovieDetailsComponent {
     }
   }
 
-  // A função agora espera receber o objeto Cinema completo para poder passar o ID
   selectSession(session: Session, cinema: Cinema): void {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
@@ -54,7 +51,6 @@ export class MovieDetailsComponent {
     }
 
     if (this.movie) {
-      // Passa o ID do cinema para o serviço de pedidos
       this.orderService.setOrderContext(this.movie, session, cinema.name, cinema.id);
       this.router.navigate(['/booking', session.id]);
     } else {
@@ -64,6 +60,17 @@ export class MovieDetailsComponent {
 
   goBack(): void {
     this.location.back();
+  }
+
+  getAgeRatingClass(ageRating: string): string {
+    const age = parseInt(ageRating, 10);
+    if (ageRating.toUpperCase() === 'L') return 'age-l';
+    if (age === 10) return 'age-10';
+    if (age === 12) return 'age-12';
+    if (age === 14) return 'age-14';
+    if (age === 16) return 'age-16';
+    if (age === 18) return 'age-18';
+    return 'age-l'; // Padrão caso não corresponda a nenhum
   }
 
   getStarRatingArray(rating: number): string[] {

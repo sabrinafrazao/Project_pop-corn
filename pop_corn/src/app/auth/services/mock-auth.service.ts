@@ -42,7 +42,6 @@ export class MockAuthService extends AbstractAuthService {
     }
   }
 
-  // ===== NOVA IMPLEMENTAÇÃO DO MÉTODO addUser =====
   override addUser(userData: Omit<User, 'id'>): Observable<OperationResult<User>> {
     const newUser: User = {
       ...userData,
@@ -95,4 +94,16 @@ export class MockAuthService extends AbstractAuthService {
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
+ 
+  override getToken(): string | null{
+  return null
+  }
+
+  override forgotPassword(email: string): Observable<OperationResult> {
+    console.log(`[MOCK] Pedido de recuperação de senha para o email: ${email}`);
+    // Numa aplicação real, a API verificaria se o email existe e enviaria o link.
+    // Aqui, apenas simulamos o sucesso da operação.
+    return of({ success: true });
+  }
+
 }

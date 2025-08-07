@@ -16,8 +16,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Ação, Suspense, Drama',
     duration: '2h49min',
     rating: 4.7,
-    votes: 45922,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '18',
+    synopsis: 'John Wick enfrenta os líderes do submundo em uma batalha pela liberdade, com lutas intensas e muita ação do início ao fim.'
   },
   {
     id: 2,
@@ -26,8 +26,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Ação, Ficção, Super-herói',
     duration: '2h40min',
     rating: 4.8,
-    votes: 120931,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '12',
+    synopsis: 'Os Vingadores unem forças com os Guardiões da Galáxia para impedir que Thanos reúna as Joias do Infinito e destrua metade do universo.'
   },
   {
     id: 3,
@@ -36,8 +36,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Romance, Drama',
     duration: '2h03min',
     rating: 4.6,
-    votes: 9820,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '16',
+    synopsis: 'Baseado no best-seller de Colleen Hoover, a história acompanha Lily Bloom enquanto ela lida com relacionamentos marcados por amor e trauma.'
   },
   {
     id: 4,
@@ -46,8 +46,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Ação, Comédia, Super-herói',
     duration: '2h15min',
     rating: 4.9,
-    votes: 16402,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '18',
+    synopsis: 'Deadpool retorna em uma aventura cheia de humor ácido e violência exagerada, agora ao lado do icônico Wolverine.'
   },
   {
     id: 5,
@@ -56,8 +56,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Ação, Super-herói, Drama',
     duration: '2h31min',
     rating: 4.0,
-    votes: 94410,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '14',
+    synopsis: 'Temendo as ações do Superman, Batman enfrenta o Homem de Aço enquanto uma nova ameaça se forma nas sombras.'
   },
   {
     id: 6,
@@ -66,8 +66,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Drama, Thriller, Psicológico',
     duration: '2h02min',
     rating: 4.6,
-    votes: 86213,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '18',
+    synopsis: 'Arthur Fleck, um comediante fracassado, mergulha em uma espiral de loucura e violência que o transforma no temido Coringa.'
   },
   {
     id: 7,
@@ -76,8 +76,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Ficção, Aventura, Fantasia',
     duration: '3h12min',
     rating: 4.7,
-    votes: 57427,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '12',
+    synopsis: 'Jake Sully e Neytiri enfrentam novas ameaças enquanto protegem sua família e o planeta Pandora em uma aventura visualmente deslumbrante.'
   },
   {
     id: 8,
@@ -86,8 +86,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Ação, Super-herói, Aventura',
     duration: '2h12min',
     rating: 4.5,
-    votes: 48331,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '12',
+    synopsis: 'Shang-Chi precisa confrontar seu passado e enfrentar o pai, líder de uma poderosa organização criminosa, usando suas habilidades em artes marciais.'
   },
   {
     id: 9,
@@ -96,8 +96,8 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Terror, Sobrenatural',
     duration: '1h46min',
     rating: 4.4,
-    votes: 21722,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '16',
+    synopsis: 'A boneca amaldiçoada Annabelle volta a causar terror quando é trancada em um cômodo pelos demonologistas Warren, mas acorda forças malignas.'
   },
   {
     id: 10,
@@ -106,10 +106,11 @@ export class MockMovieService implements AbstractMovieService {
     genre: 'Fantasia, Aventura, Magia',
     duration: '2h32min',
     rating: 4.9,
-    votes: 100523,
-    synopsis: 'Após os eventos devastadores de "Guerra Infinita", o universo está em ruínas. Com a ajuda dos aliados restantes, os Vingadores se reúnem mais uma vez para reverter as ações de Thanos e restaurar o equilíbrio do universo.'
+    ageRating: '10',
+    synopsis: 'Harry descobre que é um bruxo e parte para Hogwarts, onde enfrentará desafios mágicos e inimigos perigosos enquanto busca seu destino.'
   }
 ]);
+
 
 
     refresh(): void {

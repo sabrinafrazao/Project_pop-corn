@@ -2,17 +2,16 @@
   <div class="movie-card">
     <div class="image-container">
       <img [src]="movie.image" alt="{{ movie.title }}" />
-      <span class="tag-age" *ngIf="movie.ageRating">{{ movie.ageRating }}</span>
+      <span class="tag-age" [ngClass]="getAgeRatingClass(movie.ageRating)">{{ movie.ageRating }}</span>
     </div>
 
     <div class="movie-info">
       <h3 class="title" title="{{ movie.title }}">{{ movie.title }}</h3>
       <p class="genre" title="{{ movie.genre }}">{{ movie.genre }}</p>
-      <p class="duration">{{ movie.duration }}</p>
       
       <div class="rating">
         <span class="material-icons star-icon">star</span>
-        {{ movie.rating }}
+        {{ movie.rating }} / 5
       </div>
     </div>
   </div>

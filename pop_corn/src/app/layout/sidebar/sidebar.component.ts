@@ -1,8 +1,6 @@
-// src/app/layout/sidebar/sidebar.component.ts
-import { Component, signal, HostBinding, inject } from '@angular/core';
+import { Component, signal, HostBinding, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-// 1. Importe a classe abstrata
 import { AbstractAuthService } from '../../auth/services/abstract-auth.service';
 
 @Component({
@@ -12,13 +10,22 @@ import { AbstractAuthService } from '../../auth/services/abstract-auth.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent {
-  // 2. Injete a classe abstrata
+export class SidebarComponent implements OnInit {
   authService = inject(AbstractAuthService);
-  isCollapsed = signal(false);
+  
+  // ===== 1. RECEBE O ESTADO INICIAL COMO INPUT =====
+  @Input() startCollapsed: boolean = false;
+
+  // O sinal agora usa o 'startCollapsed' como valor inicial
+  isCollapsed = signal(this.startCollapsed);
 
   @HostBinding('class.collapsed') get collapsed() {
     return this.isCollapsed();
+  }
+
+  // ===== 2. APLICA O ESTADO INICIAL QUANDO O COMPONENTE É CRIADO =====
+  ngOnInit(): void {
+    this.isCollapsed.set(this.startCollapsed);
   }
 
   toggleSidebar(): void {

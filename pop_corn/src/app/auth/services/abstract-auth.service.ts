@@ -15,4 +15,8 @@ export abstract class AbstractAuthService {
   
   abstract login(email: string, password: string): void;
   abstract logout(): void;
+  abstract forgotPassword(email: string): Observable<OperationResult>;
+
+  abstract getToken(): string | null;
+
 }

@@ -4,8 +4,7 @@ export interface Movie {
   image: string;
   genre: string;
   duration: string;
-  rating: number;
-  votes: number;
+  rating: number; // A nota de 1 a 5 estrelas
   synopsis: string;
-  ageRating?: string;
+  ageRating: string; // A classificação indicativa
 }

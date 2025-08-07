@@ -6,15 +6,27 @@
     <div class="movie-header">
         <img [src]="'/' + movie.image" alt="{{ movie.title }}" class="poster">
         <div class="movie-info">
+
         <h1>{{ movie.title }}</h1>
-        <div class="rating">
-            <ng-container *ngFor="let star of getStarRatingArray(movie.rating)">
-                <span class="material-icons star-icon">
-                {{ star === 'full' ? 'star' : (star === 'half' ? 'star_half' : 'star_border') }}
-                </span>
-            </ng-container>
-            <span class="rating-value">{{ movie.rating }}</span>
+
+        <div class="meta-info">
+            <span class="tag-age" [ngClass]="getAgeRatingClass(movie.ageRating)">{{ movie.ageRating }}</span>
+            <span>{{ movie.duration }}</span>
+            <span class="separator">•</span>
+            <span>{{ movie.genre }}</span>
         </div>
+
+        <div class="rating-section">
+            <div class="stars">
+                <ng-container *ngFor="let star of getStarRatingArray(movie.rating)">
+                    <span class="material-icons star-icon">
+                        {{ star === 'full' ? 'star' : (star === 'half' ? 'star_half' : 'star_border') }}
+                    </span>
+                </ng-container>
+            </div>
+            <span class="rating-value">{{ movie.rating }} / 5</span>
+        </div>
+
             <p><strong>Duração:</strong> {{ movie.duration }}</p>
             <p><strong>Gênero:</strong> {{ movie.genre }}</p>
             <p class="synopsis"><strong>Sinopse:</strong> {{ movie.synopsis }}</p>

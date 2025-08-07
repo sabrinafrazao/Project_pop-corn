@@ -19,9 +19,10 @@ export class MovieManagementComponent {
   
   currentMovieForForm: Partial<Movie> = {};
   movies = this.movieService.movies;
-
-  // ===== SINAL PARA A PRÉ-VISUALIZAÇÃO DA IMAGEM =====
   imagePreview = signal<string | null>(null);
+
+  // ===== LISTA DE CLASSIFICAÇÕES PERMITIDAS =====
+  ageRatings: string[] = ['L', '10', '12', '14', '16', '18'];
 
   openAddModal(): void {
     this.modalMode.set('add');
@@ -31,16 +32,17 @@ export class MovieManagementComponent {
       genre: '',
       duration: '',
       rating: 0,
-      image: '' // A imagem será tratada separadamente
+      image: '',
+      ageRating: 'L', // Padrão 'Livre'
     };
-    this.imagePreview.set(null); // Limpa a pré-visualização anterior
+    this.imagePreview.set(null);
     this.isModalVisible.set(true);
   }
 
   openEditModal(movie: Movie): void {
     this.modalMode.set('edit');
     this.currentMovieForForm = { ...movie };
-    this.imagePreview.set(movie.image); // Mostra a imagem atual do filme
+    this.imagePreview.set(movie.image);
     this.isModalVisible.set(true);
   }
 
@@ -48,18 +50,13 @@ export class MovieManagementComponent {
     this.isModalVisible.set(false);
   }
 
-  // ===== NOVA FUNÇÃO PARA LIDAR COM A SELEÇÃO DE FICHEIROS =====
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
+    if (input.files?.[0]) {
       const file = input.files[0];
-      
-      // Usa o FileReader para ler o ficheiro como uma Data URL
       const reader = new FileReader();
       reader.onload = () => {
-        // Define o sinal com o resultado para mostrar a pré-visualização
         this.imagePreview.set(reader.result as string);
-        // Guarda a URL no objeto do formulário
         this.currentMovieForForm.image = reader.result as string;
       };
       reader.readAsDataURL(file);
@@ -72,20 +69,17 @@ export class MovieManagementComponent {
       return;
     }
 
-    // A lógica de adicionar/atualizar já funciona, pois a URL da imagem
-    // (neste caso, uma Data URL base64) já está em 'currentMovieForForm'
-    const movieData = { ...form.value, image: this.currentMovieForForm.image };
+    const movieData = { ...this.currentMovieForForm, ...form.value };
 
     if (this.modalMode() === 'add') {
-      this.movieService.add(movieData).subscribe(result => {
+      this.movieService.add(movieData as Omit<Movie, 'id'>).subscribe(result => {
         if (result.success) {
           console.log('Filme adicionado com sucesso!');
           this.closeModal();
         }
       });
     } else {
-      const updatedMovie = { ...this.currentMovieForForm, ...movieData } as Movie;
-      this.movieService.update(updatedMovie).subscribe(result => {
+      this.movieService.update(movieData as Movie).subscribe(result => {
         if (result.success) {
           console.log('Filme atualizado com sucesso!');
           this.closeModal();

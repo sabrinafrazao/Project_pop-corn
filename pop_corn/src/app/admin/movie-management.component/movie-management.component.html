@@ -27,6 +27,7 @@
   </div>
 </div>
 
+<!-- Modal com Seletor de Classificação -->
 <div class="modal-overlay" *ngIf="isModalVisible()">
   <div class="modal-content">
     <h2>{{ modalMode() === 'add' ? 'Adicionar Novo Filme' : 'Editar Filme' }}</h2>
@@ -48,17 +49,28 @@
         <label for="duration">Duração</label>
         <input type="text" id="duration" name="duration" [(ngModel)]="currentMovieForForm.duration" required>
       </div>
-       <div class="form-group">
-        <label for="rating">Classificação</label>
-        <input type="number" id="rating" name="rating" [(ngModel)]="currentMovieForForm.rating" step="0.1" required>
+      
+      <!-- ===== CAMPO DE CLASSIFICAÇÃO ALTERADO PARA <select> ===== -->
+      <div class="form-group">
+        <label for="ageRating">Classificação Indicativa</label>
+        <select id="ageRating" name="ageRating" [(ngModel)]="currentMovieForForm.ageRating" required>
+          <option *ngFor="let rating of ageRatings" [value]="rating">
+            {{ rating === 'L' ? 'Livre para todos os públicos' : rating + ' anos' }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="rating">Nota (de 0 a 5)</label>
+        <input type="number" id="rating" name="rating" [(ngModel)]="currentMovieForForm.rating" step="0.1" min="0" max="5" required>
       </div>
       
       <div class="form-group">
         <label for="image">Pôster do Filme</label>
         <img [src]="imagePreview()" alt="Pré-visualização do pôster" class="image-preview" *ngIf="imagePreview()">
-        
         <input type="file" id="image" (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/jpg">
       </div>
+
       <div class="modal-actions">
         <button type="button" class="cancel-button" (click)="closeModal()">Cancelar</button>
         <button type="submit" class="save-button" [disabled]="movieForm.invalid">Salvar</button>
