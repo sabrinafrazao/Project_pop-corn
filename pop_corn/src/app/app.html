@@ -1,1 +1,7 @@
-<app-movie-list></app-movie-list>
+<div class="main-layout">
+    <app-sidebar [startCollapsed]="isSidebarCollapsed()"></app-sidebar>
+    
+    <main class="content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

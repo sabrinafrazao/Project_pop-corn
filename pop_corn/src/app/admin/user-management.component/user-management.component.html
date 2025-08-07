@@ -1,0 +1,60 @@
+<div class="management-container">
+  <h1>Gerenciamento de Administradores</h1>
+  <p class="subtitle">Associe um cinema a cada administrador ou crie um novo perfil de admin.</p>
+  
+  <button class="add-button" (click)="openAddUserModal()">Criar Novo Admin</button>
+
+  <div class="user-table" *ngIf="adminUsers().length > 0; else noAdmins">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome do Administrador</th>
+          <th>Email</th>
+          <th>Cinema Gerenciado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let admin of adminUsers()">
+          <td>{{ admin.name }}</td>
+          <td>{{ admin.email }}</td>
+          <td>
+            <select [ngModel]="admin.cinemaId || 'none'" (change)="onCinemaChange(admin, $event)">
+              <option value="none">Nenhum</option>
+              <option *ngFor="let cinema of allCinemas()" [value]="cinema.id">
+                {{ cinema.name }}
+              </option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noAdmins>
+    <p class="no-data-message">Não existem perfis de Administrador no sistema para gerir.</p>
+  </ng-template>
+</div>
+
+<div class="modal-overlay" *ngIf="isUserModalVisible()">
+  <div class="modal-content">
+    <h2>Criar Novo Administrador</h2>
+    <form #userForm="ngForm" (ngSubmit)="handleAddUser(userForm)">
+      <div class="form-group">
+        <label for="name">Nome Completo</label>
+        <input type="text" name="name" [(ngModel)]="newUser.name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" [(ngModel)]="newUser.email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Senha Provisória</label>
+        <input type="password" name="password" [(ngModel)]="newUser.password" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-button" (click)="closeUserModal()">Cancelar</button>
+        <button type="submit" class="save-button" [disabled]="userForm.invalid">Criar Admin</button>
+      </div>
+    </form>
+  </div>
+</div>

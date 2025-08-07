@@ -1,0 +1,82 @@
+<div class="management-container">
+  <h1>Gerenciamento de Sessões</h1>
+
+  <div *ngIf="authService.isMaster()" class="selection-area">
+    <div class="form-group">
+      <label for="cinema-select">Selecione um Cinema para Gerenciar</label>
+      <select id="cinema-select" [ngModel]="selectedCinemaId()" (ngModelChange)="onCinemaSelect($event)">
+        <option [ngValue]="null" disabled>-- Escolha um cinema --</option>
+        <option *ngFor="let cinema of allCinemas()" [value]="cinema.id">
+          {{ cinema.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <ng-container *ngIf="managedCinema()">
+    <h2 class="cinema-title">
+      Gerenciando o cinema: <strong>{{ managedCinema()?.name }}</strong>
+    </h2>
+
+    <div class="selection-area">
+      <div class="form-group">
+        <label for="movie-select">Selecione um Filme para Gerenciar as Sessões</label>
+        <select id="movie-select" [ngModel]="selectedMovieId()" (ngModelChange)="onMovieSelect($event)">
+          <option [ngValue]="null" disabled>-- Escolha um filme --</option>
+          <option *ngFor="let movie of allMovies()" [value]="movie.id">
+            {{ movie.title }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="session-list">
+      <h2>Sessões para: <strong>{{ selectedMovie()?.title || 'Nenhum filme selecionado' }}</strong></h2>
+      <div class="cinema-group">
+        <div class="room-group" *ngFor="let room of managedCinema()?.rooms">
+          <h4>{{ room.name }} - {{ room.type }} {{ room.sound }} <span *ngIf="room.technology">- {{ room.technology }}</span></h4>
+          <div class="session-times">
+            <ng-container *ngIf="selectedMovie()">
+              <span class="session-time" *ngFor="let session of getSessionsForRoom(room)">
+                {{ session.time }}
+                <button class="delete-session-button" (click)="deleteSession(session.id, room.id)">x</button>
+              </span>
+              <p *ngIf="getSessionsForRoom(room).length === 0" class="no-sessions-message">
+                Nenhuma sessão cadastrada para este filme nesta sala.
+              </p>
+            </ng-container>
+          </div>
+          <button class="add-session-button" (click)="openAddSessionModal(room)">+ Adicionar Sessão</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<div class="modal-overlay" *ngIf="isModalVisible()">
+  <div class="modal-content">
+    <h2>Adicionar Nova Sessão</h2>
+    <form #sessionForm="ngForm" (ngSubmit)="handleAddSession(sessionForm)">
+      <div class="form-group">
+        <label for="movie">Filme</label>
+        <input type="text" id="movie" name="movie" [ngModel]="selectedMovie()?.title" disabled>
+      </div>
+      <div class="form-group">
+        <label for="cinema">Cinema</label>
+        <input type="text" id="cinema" name="cinema" [ngModel]="managedCinema()?.name" disabled>
+      </div>
+      <div class="form-group">
+        <label for="room-select">Sala</label>
+        <input type="text" id="room-select" name="room" [ngModel]="selectedRoom()?.name" disabled>
+      </div>
+      <div class="form-group">
+        <label for="time">Horário</label>
+        <input type="time" id="time" name="time" [(ngModel)]="sessionTime" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-button" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="save-button" [disabled]="sessionForm.invalid">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>

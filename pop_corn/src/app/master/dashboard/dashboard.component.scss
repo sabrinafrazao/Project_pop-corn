@@ -1,0 +1,146 @@
+@use "sass:color";
+
+// Variáveis de Cor
+$color-background: #121212;
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+
+.dashboard-container {
+  padding: 2rem;
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.kpi-card {
+  background-color: $color-surface;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid $color-border;
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: $color-text-secondary;
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+  .kpi-value {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: $color-text-primary;
+    margin: 1rem 0 0;
+  }
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background-color: $color-surface;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid $color-border;
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid $color-border;
+    padding-bottom: 1rem;
+  }
+}
+
+// Gráfico de Barras com CSS
+.bar-chart {
+  .bar-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    .bar-label {
+      width: 150px;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+      color: $color-text-secondary;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bar-container {
+      flex-grow: 1;
+      background-color: $color-border;
+      border-radius: 4px;
+      height: 30px;
+    }
+    .bar {
+      background-color: $color-highlight;
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.5rem;
+      box-sizing: border-box;
+      min-width: 60px; // Garante que o texto seja sempre visível
+      span {
+        color: $color-background;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// Ranking com CSS
+.ranking-list {
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid $color-border;
+    &:last-child {
+      border-bottom: none;
+    }
+    .rank {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $color-text-secondary;
+      width: 30px;
+      text-align: center;
+    }
+    .title {
+      flex-grow: 1;
+      color: $color-text-primary;
+    }
+    .revenue {
+      font-weight: bold;
+      color: $color-highlight;
+    }
+  }
+}
+
+.no-data-message {
+  color: $color-text-secondary;
+  text-align: center;
+  padding: 2rem;
+}

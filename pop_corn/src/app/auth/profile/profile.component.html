@@ -1,1 +1,74 @@
-<p>profile.component works!</p>
+<div class="profile-container">
+  <div class="profile-header">
+    <img [src]="currentUser()?.avatarUrl" alt="Avatar do utilizador" class="profile-avatar">
+    <div class="profile-info">
+      <h1>{{ currentUser()?.name }}</h1>
+      <p>{{ currentUser()?.email }}</p>
+    </div>
+  </div>
+
+  <div class="profile-actions-card">
+    <div class="action-item">
+      <div>
+        <h3>Informações Pessoais</h3>
+        <p>Edite o seu nome e a sua foto de perfil.</p>
+      </div>
+      <button class="action-button" (click)="openProfileDialog()">Editar</button>
+    </div>
+    <div class="action-item">
+      <div>
+        <h3>Segurança</h3>
+        <p>Altere a sua senha de acesso.</p>
+      </div>
+      <button class="action-button" (click)="openPasswordDialog()">Alterar Senha</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isProfileDialogVisible()">
+  <div class="modal-content">
+    <h3>Editar Informações</h3>
+    <form #editForm="ngForm" (ngSubmit)="handleProfileUpdate(editForm)">
+      <div class="form-group">
+        <label for="name">Nome</label>
+        <input type="text" id="name" name="name" [(ngModel)]="editingUser().name" required>
+      </div>
+      <div class="form-group">
+        <label>Foto de Perfil</label>
+        <div class="avatar-edit-section">
+          <img [src]="imagePreview()" alt="Avatar" class="avatar-preview">
+          <label for="avatar-upload" class="upload-button">Escolher Ficheiro</label>
+          <input type="file" id="avatar-upload" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-button" (click)="closeProfileDialog()">Cancelar</button>
+        <button type="submit" class="save-button" [disabled]="editForm.invalid">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isPasswordDialogVisible()">
+  <div class="modal-content">
+    <h3>Alterar Senha</h3>
+    <form #passwordForm="ngForm" (ngSubmit)="handlePasswordUpdate(passwordForm)">
+      <div class="form-group">
+        <label for="currentPassword">Senha Atual</label>
+        <input type="password" id="currentPassword" name="currentPassword" [(ngModel)]="passwordData.currentPassword" required>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">Nova Senha</label>
+        <input type="password" id="newPassword" name="newPassword" [(ngModel)]="passwordData.newPassword" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Nova Senha</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="passwordData.confirmPassword" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-button" (click)="closePasswordDialog()">Cancelar</button>
+        <button type="submit" class="save-button" [disabled]="passwordForm.invalid">Salvar Senha</button>
+      </div>
+    </form>
+  </div>
+</div>

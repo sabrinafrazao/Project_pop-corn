@@ -1,0 +1,269 @@
+@use "sass:color";
+
+// Variáveis de cor alinhadas com o resto do projeto
+$color-surface: #1E1E1E;
+$color-background: #121212; // Adicionada para corrigir o erro
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+
+$width-expanded: 280px;
+$width-collapsed: 88px;
+$transition-speed: 0.3s;
+
+:host {
+  display: block;
+  flex-shrink: 0;
+  width: $width-expanded;
+  height: 100vh;
+  background-color: $color-surface;
+  border-right: 1px solid $color-border;
+  transition: width $transition-speed ease-in-out;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// --- Header ---
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+
+  .logo {
+  display: block; /* Garante que a tag 'a' se comporta como um bloco para aplicar largura e altura */
+  // Adicione ou ajuste a largura máxima conforme necessário
+  max-width: 130px;
+  height: auto; /* Mantém a proporção da imagem */
+
+  img {
+    display: block; /* Remove espaçamento extra abaixo da imagem */
+    width: 100%; /* Faz a imagem ocupar a largura do seu contêiner (.logo) */
+    height: auto; /* Mantém a proporção da imagem */
+  }
+}
+
+
+  .toggle-button {
+    background: none;
+    border: none;
+    color: $color-text-secondary;
+    cursor: pointer;
+  }
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  background-color: #2d3748;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  transition: all $transition-speed ease-in-out;
+  overflow: hidden;
+
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    transition: margin-right $transition-speed ease-in-out;
+  }
+
+  .profile-info {
+    transition: opacity 0.2s, width 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+
+    .profile-name {
+      display: block;
+      font-weight: 600;
+      color: $color-text-primary;
+    }
+
+    .profile-link {
+      font-size: 0.8rem;
+      color: $color-text-secondary;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// --- Menu de Navegação ---
+.menu {
+  flex-grow: 1;
+
+  .nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    color: $color-text-secondary;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s, background-color 0.2s;
+
+    .nav-text {
+      transition: opacity 0.2s;
+    }
+
+    &:hover {
+      color: $color-text-primary;
+      background-color: color.scale($color-surface, $lightness: 10%);
+    }
+
+    &.active {
+      background-color: $color-highlight;
+      color: $color-background;
+      font-weight: bold;
+
+      .material-icons {
+        color: $color-background;
+      }
+    }
+  }
+}
+
+// --- Secção de Logout/Login ---
+.logout-section {
+  border-top: 1px solid $color-border;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: $color-text-secondary;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-text-primary;
+    }
+  }
+}
+
+// --- LÓGICA PARA RECOLHER (CORRIGIDA) ---
+:host(.collapsed) {
+  width: $width-collapsed;
+  padding: 0;
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+
+  .sidebar-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    padding: 1rem 0;
+  }
+  
+  .toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+
+  // 🔥 Esconde também o nome e o link do perfil
+  .profile-section {
+    padding: 0.5rem 0;
+    background-color: transparent;
+    justify-content: center;
+    margin-bottom: 1rem;
+    
+    .profile-info {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .profile-avatar {
+      margin-right: 0; // remove espaço lateral
+    }
+  }
+
+  .logo,
+  .nav-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .menu {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .menu a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    gap: 0;
+  }
+
+  .logout-section {
+    width: 100%;
+    border-top: 1px solid $color-border;
+    margin-top: auto;
+    padding-top: 1rem;
+
+    display: flex;
+    justify-content: center;   // ✅ agora centralizado igual aos ícones do menu
+    align-items: center;
+
+    a {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      justify-content: center; // ✅ centraliza o ícone no botão
+      align-items: center;
+      padding: 0;
+    }
+  }
+
+  .material-icons {
+    font-size: 24px;
+    line-height: 1;
+  }
+}

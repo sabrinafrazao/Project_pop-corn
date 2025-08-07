@@ -1,0 +1,108 @@
+@use "sass:color";
+
+// Variáveis de Cor
+$color-background: #121212;
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+$color-danger: #E53E3E;
+$color-success: #48BB78;
+
+// Estilos principais
+.management-container {
+  padding: 2rem;
+  color: $color-text-primary;
+  h1 { font-size: 2.5rem; margin-bottom: 1.5rem; }
+}
+.cinema-title {
+  font-size: 1.2rem;
+  color: $color-text-secondary;
+  border-bottom: 1px solid $color-border;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  strong { color: $color-text-primary; }
+}
+.selection-area {
+  margin-bottom: 2rem;
+  background-color: $color-surface;
+  padding: 1.5rem;
+  border-radius: 8px;
+  .form-group {
+    label { display: block; margin-bottom: 0.5rem; color: $color-text-secondary; }
+    select {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.75rem;
+      background-color: $color-background;
+      border: 1px solid $color-border;
+      border-radius: 8px;
+      color: $color-text-primary;
+      font-size: 1rem;
+    }
+  }
+}
+.session-list {
+  h2 { margin-bottom: 1.5rem; border-bottom: 1px solid $color-border; padding-bottom: 1rem; }
+}
+.cinema-group {
+  background-color: $color-surface;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+.room-group {
+  margin-top: 1rem;
+  border-left: 3px solid $color-border;
+  padding-left: 1.5rem;
+  &:first-child { margin-top: 0; }
+  h4 { margin: 0 0 1rem; }
+  .session-times { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; min-height: 30px; }
+  .session-time {
+    background-color: color.adjust($color-surface, $lightness: -5%);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .delete-session-button {
+    background: none; border: none; color: $color-text-secondary; cursor: pointer; padding: 0; line-height: 1;
+    &:hover { color: $color-danger; }
+  }
+  .add-session-button {
+    background: none; border: 1px dashed $color-text-secondary; color: $color-text-secondary;
+    padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    &:hover { background-color: $color-text-secondary; color: $color-surface; }
+  }
+  .no-sessions-message { font-style: italic; color: $color-text-secondary; }
+}
+
+// Estilos do Modal
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-content {
+  background-color: $color-surface; padding: 2rem; border-radius: 12px;
+  width: 100%; max-width: 500px; border: 1px solid $color-border;
+  h2 { margin-top: 0; margin-bottom: 2rem; }
+  .form-group {
+    margin-bottom: 1.5rem;
+    label { display: block; margin-bottom: 0.5rem; color: $color-text-secondary; }
+    input {
+      width: 100%; padding: 0.75rem; background-color: $color-background;
+      border: 1px solid $color-border; border-radius: 8px; color: $color-text-primary;
+      font-size: 1rem; box-sizing: border-box;
+      &:focus { outline: none; border-color: $color-highlight; }
+      &:disabled { background-color: $color-border; }
+    }
+  }
+  .modal-actions {
+    display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;
+    button { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    .cancel-button { background-color: transparent; border: 1px solid $color-text-secondary; color: $color-text-secondary; }
+    .save-button { background-color: $color-success; border: none; color: $color-text-primary; }
+  }
+}

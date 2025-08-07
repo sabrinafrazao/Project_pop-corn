@@ -1,0 +1,90 @@
+<div class="booking-container">
+    <div class="seat-map-panel">
+        <div class="panel-header">
+            <button (click)="goBack()" class="return-button">
+                <span class="material-icons">arrow_back</span>
+            </button>
+            <h2>Selecione seus Lugares</h2>
+        </div>
+
+        <div class="session-details-header" *ngIf="movie() && session() && cinemaInfo()">
+            <h3>{{ movie()?.title }}</h3>
+            <p>{{ cinemaInfo()?.cinemaName }} - {{ cinemaInfo()?.roomName }}</p>
+            <p>Horário: <strong>{{ session()?.time }}</strong></p>
+        </div>
+
+        <div class="screen-representation">TELA</div>
+
+        <ng-container *ngIf="session()?.seatMap as seatMap">
+            <div class="seat-map">
+                <div class="seat-row" *ngFor="let row of seatMap">
+                    <button class="seat" 
+                            *ngFor="let seat of row" 
+                            [ngClass]="seat.status"
+                            [disabled]="seat.status === 'occupied'"
+                            (click)="toggleSeat(seat)">
+                        {{ seat.id }}
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+
+        <div class="seat-legend">
+            <div class="legend-item">
+                <div class="seat-example available"></div>
+                <span>Disponível</span>
+            </div>
+            <div class="legend-item">
+                <div class="seat-example selected"></div>
+                <span>Selecionado</span>
+            </div>
+            <div class="legend-item">
+                <div class="seat-example occupied"></div>
+                <span>Ocupado</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-panel">
+        <div class="order-content" [class.disabled]="totalSeatsSelected() === 0">
+            <h3 class="order-title">Selecione os Tipos de Ingresso</h3>
+            <p class="order-subtitle">{{ totalSeatsSelected() }} lugar(es) selecionado(s)</p>
+
+            <div class="ticket-list">
+                <div class="ticket-item" *ngFor="let item of order()">
+                    <div class="ticket-info">
+                        <span class="ticket-name">{{ item.ticketType.name }}</span>
+                        <span class="ticket-price">{{ item.ticketType.price | currency:'BRL' }}</span>
+                    </div>
+                    <div class="quantity-selector">
+                        <button (click)="decrement(item.ticketType.id)" [disabled]="item.quantity === 0">-</button>
+                        <input type="text" [value]="item.quantity" readonly>
+                        <button (click)="increment(item.ticketType.id)" [disabled]="!canAddMoreTickets()">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-summary-footer">
+            <div class="order-summary">
+                <div class="summary-item total">
+                    <span>Valor Total</span>
+                    <span>{{ totalPrice | currency:'BRL' }}</span>
+                </div>
+            </div>
+
+            <div class="order-summary-footer">
+                <button class="continue-button" 
+                        [disabled]="!isOrderComplete()" 
+                        (click)="continueToBomboniere()">
+                    Continuar
+                </button>
+            </div>
+        </div>
+
+        <div class="placeholder-text" *ngIf="totalSeatsSelected() === 0">
+            <span class="material-icons placeholder-icon">event_seat</span>
+            <p>Selecione um ou mais assentos no mapa para continuar.</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,130 @@
+@use "sass:color"; // Adicionado para corrigir o erro de SASS
+
+// Variáveis de cor para consistência
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+
+.search-bar-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 2rem; // Adiciona margem inferior
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: $color-surface;
+  padding: 0.75rem 1rem;
+  border-radius: 25px; // Bordas mais arredondadas
+  border: 1px solid $color-border;
+  transition: border-color 0.3s;
+
+  &:focus-within {
+    border-color: $color-highlight;
+  }
+
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: $color-text-primary;
+    font-size: 1rem;
+    margin-left: 0.75rem;
+
+    &::placeholder {
+      color: $color-text-secondary;
+    }
+  }
+
+  .search-icon {
+    color: $color-text-secondary;
+  }
+
+  .clear-button {
+    background: none;
+    border: none;
+    color: $color-text-secondary;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+
+    &:hover {
+      color: $color-text-primary;
+    }
+  }
+}
+
+.search-modal {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background-color: $color-surface;
+  color: $color-text-primary;
+  border-radius: 12px;
+  border: 1px solid $color-border;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  max-height: 300px;
+  overflow-y: auto;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+
+      &:hover {
+        // CORRIGIDO: Função 'lighten' atualizada
+        background-color: color.scale($color-surface, $lightness: 10%);
+      }
+    }
+
+    .result-image {
+      width: 40px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .result-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .result-title {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .result-genre {
+      font-size: 0.85rem;
+      color: $color-text-secondary;
+    }
+  }
+
+  .no-results {
+    padding: 1rem;
+    text-align: center;
+    color: $color-text-secondary;
+  }
+}

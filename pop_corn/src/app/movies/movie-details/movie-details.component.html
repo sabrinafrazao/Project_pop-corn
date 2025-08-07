@@ -1,1 +1,56 @@
-<p>movie-details.component works!</p>
+<div class="details-container" *ngIf="movie">
+    <button (click)="goBack()" class="return-button">
+        <span class="material-icons">arrow_back</span> Voltar
+    </button>
+
+    <div class="movie-header">
+        <img [src]="'/' + movie.image" alt="{{ movie.title }}" class="poster">
+        <div class="movie-info">
+
+        <h1>{{ movie.title }}</h1>
+
+        <div class="meta-info">
+            <span class="tag-age" [ngClass]="getAgeRatingClass(movie.ageRating)">{{ movie.ageRating }}</span>
+            <span>{{ movie.duration }}</span>
+            <span class="separator">•</span>
+            <span>{{ movie.genre }}</span>
+        </div>
+
+        <div class="rating-section">
+            <div class="stars">
+                <ng-container *ngFor="let star of getStarRatingArray(movie.rating)">
+                    <span class="material-icons star-icon">
+                        {{ star === 'full' ? 'star' : (star === 'half' ? 'star_half' : 'star_border') }}
+                    </span>
+                </ng-container>
+            </div>
+            <span class="rating-value">{{ movie.rating }} / 5</span>
+        </div>
+
+            <p><strong>Duração:</strong> {{ movie.duration }}</p>
+            <p><strong>Gênero:</strong> {{ movie.genre }}</p>
+            <p class="synopsis"><strong>Sinopse:</strong> {{ movie.synopsis }}</p>
+        </div>
+    </div>
+
+    <div class="session-filters"></div>
+
+    <div class="cinema-list">
+        <div class="cinema-group" *ngFor="let cinema of cinemasWithSessions()">
+            <h2>{{ cinema.name }}</h2>
+            <div class="room" *ngFor="let room of cinema.rooms">
+                <p>
+                {{ room.name }}
+                <span> • {{ room.type }} • {{ room.sound }}<span *ngIf="room.technology"> • {{ room.technology }}</span></span>
+                </p>
+                <div class="session-times">
+                    <button class="session-time" 
+                            *ngFor="let session of room.sessions" 
+                            (click)="selectSession(session, cinema)">
+                        {{ session.time }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

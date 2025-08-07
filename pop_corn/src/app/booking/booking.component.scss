@@ -1,0 +1,301 @@
+// src/app/booking/booking.component.scss
+@use "sass:color";
+
+// Variáveis de Cor
+$color-background: #121212;
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+$color-seat-available: #4A5568;
+$color-seat-occupied: #2D3748;
+$color-seat-selected: #FFC800;
+
+:host {
+    display: block;
+    background-color: $color-background;
+    height: 100%;
+}
+
+.booking-container {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+// --- Painel do Mapa de Lugares (Esquerda) ---
+.seat-map-panel {
+    flex-grow: 1;
+    background-color: $color-surface;
+    border-radius: 12px;
+    border: 1px solid $color-border;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .panel-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      
+      h2 {
+          margin: 0 auto;
+          color: $color-text-primary;
+          padding-right: 36px; 
+      }
+
+      .return-button {
+          background: transparent;
+          border: none;
+          color: $color-text-secondary;
+          cursor: pointer;
+          padding: 0;
+          .material-icons { font-size: 24px; }
+          &:hover { color: $color-text-primary; }
+      }
+    }
+
+    .session-details-header {
+        width: 100%;
+        background-color: color.adjust($color-surface, $lightness: -3%); // CORRIGIDO
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 2rem;
+        border: 1px solid $color-border;
+        h3 { margin: 0 0 0.5rem; color: $color-text-primary; }
+        p { margin: 0.25rem 0; color: $color-text-secondary; }
+    }
+
+    .screen-representation {
+        width: 60%;
+        padding: 0.5rem;
+        text-align: center;
+        font-weight: bold;
+        color: $color-text-secondary;
+        border-bottom: 4px solid $color-text-secondary;
+        margin-bottom: 2rem;
+    }
+
+    .seat-map {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .seat-row {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .seat {
+        width: 30px;
+        height: 25px;
+        border: 1px solid $color-seat-available;
+        border-radius: 6px 6px 2px 2px;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: 0.7rem;
+        color: $color-text-secondary;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+        &.available:not(:disabled):hover {
+            background-color: color.scale($color-seat-available, $lightness: 10%);
+        }
+
+        &.occupied {
+            background-color: $color-seat-occupied;
+            border-color: color.adjust($color-seat-occupied, $lightness: -5%); // CORRIGIDO
+            color: color.adjust($color-text-secondary, $lightness: -20%); // CORRIGIDO
+            cursor: not-allowed;
+        }
+
+        &.selected {
+            background-color: $color-seat-selected;
+            border-color: color.scale($color-seat-selected, $lightness: 10%);
+            color: $color-background;
+            font-weight: bold;
+        }
+    }
+
+    .seat-legend {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 2rem;
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: $color-text-secondary;
+        }
+        .seat-example {
+            width: 20px;
+            height: 16px;
+            border-radius: 4px 4px 1px 1px;
+            &.available { border: 1px solid $color-seat-available; }
+            &.selected { background-color: $color-seat-selected; }
+            &.occupied { background-color: $color-seat-occupied; }
+        }
+    }
+}
+
+
+// --- Painel de Pedido (Direita) ---
+.order-panel {
+    width: 380px;
+    flex-shrink: 0;
+    background-color: $color-surface;
+    border-radius: 12px;
+    border: 1px solid $color-border;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+
+    .order-content {
+        padding: 2rem;
+        transition: opacity 0.3s ease-in-out;
+        &.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+    }
+    
+    .order-title { margin: 0 0 0.25rem; color: $color-text-primary; }
+    .order-subtitle { margin: 0 0 1.5rem; color: $color-text-secondary; font-size: 0.9rem; }
+
+    .ticket-list {
+        border-top: 1px solid $color-border;
+        padding-top: 1.5rem;
+    }
+
+    .ticket-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        &:last-child { margin-bottom: 0; }
+    }
+
+    .ticket-info {
+        .ticket-name { display: block; font-weight: 600; color: $color-text-primary; }
+        .ticket-price { color: $color-text-secondary; font-size: 0.9rem; }
+    }
+
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        
+        button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+            &:not(:disabled) {
+                background-color: transparent;
+                border: 1px solid $color-highlight;
+                color: $color-highlight;
+            }
+
+            &:not(:disabled):hover,
+            &:not(:disabled):active {
+                background-color: $color-highlight;
+                border-color: $color-highlight;
+                color: $color-background;
+            }
+            
+            &:disabled {
+                background-color: #333333;
+                border: 1px solid #333333;
+                color: $color-text-secondary;
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+
+        input {
+            width: 35px;
+            text-align: center;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: $color-text-primary;
+            background: transparent;
+        }
+    }
+
+    .order-summary-footer {
+        padding: 2rem;
+        border-top: 1px solid $color-border;
+        background-color: $color-surface;
+    }
+
+    .order-summary {
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: $color-text-secondary;
+            &.total {
+                font-weight: bold;
+                font-size: 1.2rem;
+                color: $color-text-primary;
+            }
+        }
+    }
+
+    .continue-button {
+        margin-top: 1rem;
+        width: 100%;
+        padding: 1rem;
+        border-radius: 8px;
+        border: none;
+        background-color: $color-highlight;
+        color: $color-background;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        &:hover:not(:disabled) {
+            background-color: color.scale($color-highlight, $lightness: 10%);
+        }
+        &:disabled {
+            background-color: color.adjust($color-surface, $lightness: -5%); // CORRIGIDO
+            color: $color-text-secondary;
+            cursor: not-allowed;
+        }
+    }
+
+    .placeholder-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: $color-text-secondary;
+        padding: 1rem;
+        z-index: 10;
+        .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 1rem;
+        }
+    }
+}

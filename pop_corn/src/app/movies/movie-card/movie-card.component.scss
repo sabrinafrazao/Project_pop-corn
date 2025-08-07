@@ -1,25 +1,111 @@
+@use "sass:color";
+
+// Variáveis de cor para consistência
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+$color-background: #121212;
+
+:host {
+  display: block;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
 .movie-card {
-  background-color: #fff;
+  background-color: $color-surface;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 200px;
-  text-align: center;
-  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid transparent;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 
+  &:hover {
+    transform: translateY(-5px);
+    border-color: $color-border;
+  }
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 150%; // Proporção de poster (altura é 1.5x a largura)
+  
   img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
-    border-radius: 8px;
+    height: 100%;
+    object-fit: cover;
   }
+}
 
-  h3 {
-    margin: 0.5rem 0;
-    font-size: 1.2rem;
-  }
+.movie-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: left;
+}
 
-  .description {
-    color: #666;
-    font-size: 0.9rem;
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin: 0 0 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.genre {
+  font-size: 0.85rem;
+  color: $color-text-secondary;
+  margin: 0 0 0.5rem;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: auto; // Empurra a avaliação para a base do card
+  padding-top: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: $color-text-primary;
+
+  .star-icon {
+    color: $color-highlight;
+    font-size: 1.1rem;
   }
+}
+
+// Estilos para a tag de classificação indicativa
+.tag-age {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-weight: bold;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(0,0,0,0.2);
+  
+  // Cores baseadas na classificação (padrão do Brasil)
+  &.age-l  { background-color: #00A54E; color: #fff; } // Verde
+  &.age-10 { background-color: #00A0E3; color: #fff; } // Azul
+  &.age-12 { background-color: #F8C300; color: #000; } // Amarelo
+  &.age-14 { background-color: #F68D2E; color: #fff; } // Laranja
+  &.age-16 { background-color: #E83630; color: #fff; } // Vermelho
+  &.age-18 { background-color: #231F20; color: #fff; } // Preto
 }

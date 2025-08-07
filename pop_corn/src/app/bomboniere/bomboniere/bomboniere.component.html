@@ -1,0 +1,64 @@
+<div class="page-container">
+  <!-- Coluna de Produtos -->
+  <div class="products-column">
+    <div class="header">
+      <button (click)="goBack()" class="return-button">
+          <span class="material-icons">arrow_back</span> Voltar
+      </button>
+      <h1>Bomboniere</h1>
+    </div>
+    <div class="products-grid">
+      <app-product-card 
+        *ngFor="let product of products()"
+        [product]="product"
+        (quantityChange)="handleQuantityChange($event)">
+      </app-product-card>
+    </div>
+  </div>
+
+  <!-- Barra Lateral de Resumo do Pedido -->
+  <div class="summary-sidebar">
+    <h3 class="summary-title">Resumo do Pedido</h3>
+    
+    <div class="summary-section" *ngIf="orderService.activeOrderContext() as context">
+        <h4>Filme & Sessão</h4>
+        <div class="summary-item movie-details">
+            <img [src]="context.movie.image" [alt]="context.movie.title" class="summary-poster">
+            <div>
+                <strong>{{ context.movie.title }}</strong>
+                <span>{{ context.cinemaName }}</span>
+                <span>Sala: {{ context.session.id }} | Horário: {{ context.session.time }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="summary-section">
+      <h4>Ingressos</h4>
+      <div *ngFor="let ticket of orderService.ticketOrder()" class="summary-item">
+        <span>{{ ticket.quantity }}x {{ ticket.ticketType.name }}</span>
+        <span>{{ (ticket.quantity * ticket.ticketType.price) | currency:'BRL' }}</span>
+      </div>
+      <!-- LINHA CORRIGIDA -->
+      <div class="summary-item seats" *ngIf="selectedSeatsText()">
+        <span>Assentos: {{ selectedSeatsText() }}</span>
+      </div>
+    </div>
+
+    <div class="summary-section" *ngIf="orderService.bomboniereOrder().length > 0">
+      <h4>Comidas & Bebidas</h4>
+      <div *ngFor="let item of orderService.bomboniereOrder()" class="summary-item">
+        <span>{{ item.quantity }}x {{ item.product.name }}</span>
+        <span>{{ (item.quantity * item.product.price) | currency:'BRL' }}</span>
+      </div>
+    </div>
+    
+    <div class="summary-footer">
+      <div class="total-price">
+        <span>TOTAL</span>
+        <span>{{ orderService.totalPrice() | currency:'BRL' }}</span>
+      </div>
+      <button class="payment-button" (click)="proceedToPayment()">
+        {{ orderService.bomboniereOrder().length > 0 ? 'Pagamento' : 'Pular' }}
+      </button>
+    </div>
+  </div>
+</div>

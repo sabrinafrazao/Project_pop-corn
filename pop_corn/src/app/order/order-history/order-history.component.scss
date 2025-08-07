@@ -1,0 +1,241 @@
+// src/app/order-history/order-history.component.scss
+@use "sass:color";
+
+// Variáveis de Cor
+$color-background: #121212;
+$color-surface: #1E1E1E;
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #A0AEC0;
+$color-highlight: #FFC800;
+$color-border: #2D3748;
+
+:host {
+    display: block;
+    background-color: $color-background;
+    min-height: 100vh;
+}
+
+.page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+
+    h1 {
+        font-size: 2.5rem;
+        color: $color-text-primary;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+}
+
+.no-orders {
+    text-align: center;
+    padding: 4rem;
+    background-color: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+
+    p {
+        font-size: 1.2rem;
+        color: $color-text-secondary;
+        margin: 0 0 1.5rem;
+    }
+
+    button {
+        padding: 1rem 2rem;
+        border: none;
+        background-color: $color-highlight;
+        color: $color-background;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.order-card {
+    background-color: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: color.adjust($color-surface, $lightness: -3%);
+    border-bottom: 1px solid $color-border;
+    cursor: pointer;
+
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .order-id {
+        font-weight: bold;
+        color: $color-text-primary;
+    }
+
+    .order-date {
+        font-size: 0.85rem;
+        color: $color-text-secondary;
+    }
+
+    .order-status {
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        &.aguardando-pagamento {
+            background-color: color.scale($color-highlight, $alpha: -80%);
+            color: $color-highlight;
+        }
+
+        &.cancelado {
+            background-color: #4A5568;
+            color: #A0AEC0;
+        }
+    }
+}
+
+// --- SECÇÃO DE ESTILOS ADICIONADA ---
+.order-details {
+  padding: 1.5rem;
+  background-color: color.adjust($color-surface, $lightness: -2%);
+  
+  .movie-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    .movie-poster {
+      width: 60px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    
+    h4 { margin: 0 0 0.25rem; color: $color-text-primary; }
+    p { margin: 0; font-size: 0.9rem; color: $color-text-secondary; }
+  }
+  
+  .details-section {
+    margin-bottom: 1rem;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    h5 {
+      margin: 0 0 0.5rem;
+      color: $color-highlight;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    p, ul {
+      margin: 0;
+      font-size: 0.9rem;
+      color: $color-text-secondary;
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      li {
+          margin-bottom: 0.25rem;
+      }
+    }
+  }
+}
+
+
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: color.adjust($color-surface, $lightness: -3%);
+  border-top: 1px solid $color-border;
+  
+  .total-price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $color-text-primary;
+
+      span:first-child {
+          font-size: 0.9rem;
+          color: $color-text-secondary;
+          margin-right: 0.5rem;
+      }
+  }
+
+  .cancel-button {
+      background-color: transparent;
+      border: 1px solid #E53E3E;
+      color: #E53E3E;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 1rem;
+      transition: all 0.2s;
+
+      &:hover {
+          background-color: #E53E3E;
+          color: $color-text-primary;
+      }
+  }
+}
+
+// Adicione no final do ficheiro
+.filters-container {
+  display: flex;
+  gap: 1.5rem;
+  background-color: #1E1E1E; // $color-surface
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+
+  label {
+    font-size: 0.9rem;
+    color: #A0AEC0; // $color-text-secondary;
+  }
+
+  select {
+    padding: 0.75rem;
+    background-color: #121212; // $color-background;
+    border: 1px solid #2D3748; // $color-border;
+    border-radius: 8px;
+    color: #FFFFFF; // $color-text-primary;
+    font-size: 1rem;
+  }
+}
