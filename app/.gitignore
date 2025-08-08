@@ -8,7 +8,7 @@
     *.pyd
 
     # Base de Dados SQLite
-    db/popcorn.db
+    app/db/popcorn.db
 
     # Ficheiros de IDE
     .vscode/
