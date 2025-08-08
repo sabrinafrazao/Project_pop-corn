@@ -196,6 +196,100 @@ Como resultado, foi definido o seguinte plano de ação:
 
 ---
 
+## 🗓️ Período: 01/07 a 07/08
+
+### ✅ **Responsáveis pelas Entregas da Semana**
+
+* **Dimerson**: Atuou no desenvolvimento das páginas de Login, Cadastro e Recuperação de Senha, viabilizando o fluxo inicial de autenticação da aplicação.
+* **Nelson**: Contribuiu com a implementação das demais funcionalidades da semana, incluindo o desenvolvimento de módulos de perfil, dashboard, gestão administrativa, integração com a API (backend e frontend), além de diversas melhorias de usabilidade e refatorações estruturais.
+
+### 📌 **Nota sobre a Equipe**
+
+Nesta semana, a integrante **Sabrina** se desligou oficialmente do projeto. Com isso, a equipe foi reduzida. Como consequência, não houve contribuições da Sabrina nesta entrega semanal.
+
+---
+
+### 🚀 **Novas Funcionalidades e Melhorias Implementadas**
+
+#### 👤 **Funcionalidades para Utilizadores**
+
+* **🔐 Sistema de Autenticação (por Dimerson)**
+
+  * Páginas de **login**, **cadastro de novos utilizadores** e **recuperação de senha** foram criadas, garantindo o fluxo básico de autenticação de usuários da plataforma.
+
+* **👤 Página de Perfil**
+
+  * A tela de perfil foi redesenhada com um visual mais profissional. A edição de informações (nome e foto) e a alteração de senha agora ocorrem por meio de **modais separados**, proporcionando uma experiência mais fluida.
+
+* **🛒 Experiência de Compra**
+
+  * O resumo do pedido nas páginas de **Bomboniere** e **Pagamento** agora inclui informações visuais e contextuais, como o **poster do filme**, **nome do cinema** e **horário da sessão**, melhorando a clareza da confirmação de compra.
+
+---
+
+#### 🛠️ **Funcionalidades para Administradores (MASTER)**
+
+* **📊 Dashboard de Negócios**
+
+  * Implementação de um painel exclusivo para administradores master, com KPIs como **faturamento total**, **número de bilhetes vendidos** e o **filme mais popular**. Gráficos de faturamento por cinema e rankings dos filmes mais rentáveis também foram adicionados.
+
+* **🏢 Gestão de Cinemas e Salas**
+
+  * O sistema agora permite o **cadastro de novos cinemas**, bem como a **criação, edição e exclusão de salas** vinculadas a cada unidade.
+
+* **👥 Gestão de Utilizadores (Admins)**
+
+  * Um novo painel de **gestão de administradores** foi criado, permitindo a visualização de usuários com permissão **ADMIN**, a criação de novos perfis administrativos e a associação desses perfis a cinemas específicos.
+
+---
+
+#### 🧱 **Alterações Estruturais no Projeto**
+
+* **Integração Backend + Frontend**
+
+  * A estrutura do **backend** com **FastAPI** foi iniciada, com a criação de pastas e arquivos essenciais como `app/`, `requirements.txt` e `seed.py`. No **frontend**, diversos serviços Angular foram integrados para comunicação com a API.
+
+  * **Autenticação** conectada ao backend através de novos serviços como `auth.service.ts`, `abstract-auth.service.ts`, `auth.interceptor.ts` e `user.model.ts`.
+
+  * O módulo de **filmes** agora consome dados reais da API via `movie.service.ts`, e a área de **cinemas e sessões** também foi integrada à API com o `cinema.service.ts`.
+
+* **🔐 Autenticação e Autorização com Papéis**
+
+  * A autenticação agora centraliza o estado do usuário por meio do **AuthService**, com suporte a diferentes papéis (**USER, ADMIN e MASTER**). O uso de **route guards** garante a proteção e controle de acesso às rotas do sistema.
+
+* **🎟️ Fluxo de Compra Completo (End-to-End)**
+
+  * A experiência de compra foi finalizada com:
+
+    * Escolha de produtos na **bomboniere**.
+    * Finalização de compra no componente de **pagamento** com simulação de **PIX**.
+    * Histórico completo de pedidos com possibilidade de cancelamento.
+
+* **🛠️ Base para Funcionalidades de Administração**
+
+  * Serviços abstratos foram expandidos com métodos **CRUD**, preparando o terreno para telas administrativas mais avançadas.
+
+---
+
+#### 🎨 **Refatoração de UI/UX**
+
+* A interface foi modernizada com uma **sidebar responsiva**, que se adapta ao layout e exibe o perfil do usuário.
+* Elementos como **movie-card**, **search-bar** e outros foram padronizados visualmente. O fluxo de reserva foi aprimorado, exigindo que o usuário selecione os assentos antes da compra dos bilhetes.
+
+---
+
+### 📌 **Resultados**
+
+* **Sistema de autenticação** implementado com sucesso.
+* **Dashboard** para administradores master finalizado.
+* Integração completa com a API.
+* **Autenticação e controle de papéis** implementados com sucesso.
+
+---
+
+Se precisar de mais algum ajuste ou adição ao modelo, me avise!
+
+
 ### 👥 Equipe
 
 - Dimerson Coelho
