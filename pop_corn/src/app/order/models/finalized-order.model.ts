@@ -9,8 +9,11 @@ export interface FinalizedOrder {
   cpf: string;
   totalPrice: number;
   
-  userId: string;
-  cinemaId: number;
+  // --- CORREÇÃO AQUI ---
+  // Alterado de camelCase para snake_case para corresponder à API
+  user_id: string;
+  cinema_id: number;
+  // ---------------------
 
   movieTitle: string;
   movieImage: string;

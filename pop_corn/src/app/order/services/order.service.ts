@@ -13,14 +13,14 @@ import { Order as TicketOrder } from '../../booking/models/ticket.model';
 import { BomboniereOrder, BomboniereProduct } from '../../bomboniere/models/bomboniere.model';
 import { environment } from '../../../environment/environment';
 import { OperationResult } from '../../models/operation-result.model';
-import { AbstractAuthService } from '../../auth/services/abstract-auth.service'; // 1. Importar AuthService
+import { AbstractAuthService } from '../../auth/services/abstract-auth.service';
 
 @Injectable()
 export class OrderService extends AbstractOrderService {
   private apiUrl = `${environment.apiUrl}/orders`;
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
-  private authService = inject(AbstractAuthService); // 2. Injetar AuthService
+  private authService = inject(AbstractAuthService);
 
   activeOrderContext = signal<{ movie: Movie; session: Session; cinemaName: string; cinemaId: number; } | null>(null);
   selectedSeats = signal<Seat[]>([]);
@@ -34,14 +34,27 @@ export class OrderService extends AbstractOrderService {
 
   constructor() {
     super();
-    if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId) && this.authService.isAuthenticated()) {
       this.loadOrderHistory();
     }
   }
 
   private loadOrderHistory(): void {
-    // Agora que temos utilizadores, podemos implementar isto
-    this.http.get<FinalizedOrder[]>(`${this.apiUrl}/my-history`).subscribe(orders => {
+    // --- LÓGICA ATUALIZADA ---
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) return;
+
+    let endpoint = '';
+
+    if (this.authService.isMaster()) {
+      endpoint = `${this.apiUrl}/all`;
+    } else if (this.authService.isAdmin() && currentUser.cinemaId) {
+      endpoint = `${this.apiUrl}/cinema/${currentUser.cinemaId}`;
+    } else {
+      endpoint = `${this.apiUrl}/my-history`;
+    }
+
+    this.http.get<FinalizedOrder[]>(endpoint).subscribe(orders => {
       this.completedOrders.set(orders);
     });
   }
@@ -71,7 +84,6 @@ export class OrderService extends AbstractOrderService {
     });
   }
 
-  // --- MÉTODO COMPLETAMENTE ATUALIZADO ---
   finalizeOrder(cpf: string): Observable<OperationResult<FinalizedOrder>> {
     const context = this.activeOrderContext();
     const currentUser = this.authService.currentUser();

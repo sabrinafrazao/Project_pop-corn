@@ -8,7 +8,7 @@ import { Seat } from '../../cinemas/models/seat.model';
 import { Order as TicketOrder } from '../../booking/models/ticket.model';
 import { BomboniereOrder, BomboniereProduct } from '../../bomboniere/models/bomboniere.model';
 import { AbstractAuthService } from '../../auth/services/abstract-auth.service';
-import { Observable, of } from 'rxjs'; // Importar Observable e of
+import { Observable, of } from 'rxjs';
 import { OperationResult } from '../../models/operation-result.model';
 
 @Injectable()
@@ -60,8 +60,6 @@ export class MockOrderService extends AbstractOrderService {
     });
   }
 
-  // --- CORREÇÃO AQUI ---
-  // O método agora retorna um Observable com o resultado da operação.
   finalizeOrder(cpf: string): Observable<OperationResult<FinalizedOrder>> {
     const context = this.activeOrderContext();
     const currentUser = this.authService.currentUser();
@@ -77,8 +75,10 @@ export class MockOrderService extends AbstractOrderService {
       status: 'Aguardando Pagamento',
       cpf,
       totalPrice: this.totalPrice(),
-      userId: currentUser.id,
-      cinemaId: context.cinemaId,
+      // --- CORREÇÃO AQUI ---
+      user_id: currentUser.id,
+      cinema_id: context.cinemaId,
+      // ---------------------
       movieTitle: context.movie.title,
       movieImage: context.movie.image,
       cinemaName: context.cinemaName,
@@ -94,7 +94,6 @@ export class MockOrderService extends AbstractOrderService {
     this.resetActiveOrder();
     return of({ success: true, data: newFinalizedOrder });
   }
-  // ---------------------
 
   cancelOrder(orderId: string): void {
     this.completedOrders.update(orders =>

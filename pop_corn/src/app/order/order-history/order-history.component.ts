@@ -22,50 +22,56 @@ export class OrderHistoryComponent {
   cinemaService = inject(AbstractCinemaService);
   router = inject(Router);
 
-  // Sinais para os filtros
   filterByCinemaId = signal<string>('all');
   filterByMovieTitle = signal<string>('all');
 
-  // Obtém todos os dados necessários
   allOrders = this.orderService.completedOrders;
   allCinemas = this.cinemaService.cinemas;
   currentUser = this.authService.currentUser;
 
-  // Sinal computado que decide quais pedidos mostrar com base na role e nos filtros
+  // --- PROPRIEDADE RE-ADICIONADA ---
+  movieTitlesInOrders = computed(() => {
+    const adminCinemaId = this.currentUser()?.cinemaId;
+    if (!this.authService.isAdmin() || this.authService.isMaster()) return [];
+    
+    const titles = this.allOrders()
+      .filter(o => o.cinema_id === adminCinemaId)
+      .map(o => o.movieTitle);
+    return [...new Set(titles)];
+  });
+  // ---------------------------------
+
   displayedOrders = computed(() => {
     const user = this.currentUser();
     if (!user) return [];
 
     let orders = this.allOrders();
+    const cinemaFilter = this.filterByCinemaId();
 
-    // Filtra por role
     if (this.authService.isMaster()) {
-      if (this.filterByCinemaId() !== 'all') {
-        orders = orders.filter(o => o.cinemaId === +this.filterByCinemaId());
+      if (cinemaFilter !== 'all') {
+        const numericCinemaId = +cinemaFilter;
+        orders = orders.filter(o => o.cinema_id === numericCinemaId);
       }
     } else if (this.authService.isAdmin()) {
-      orders = orders.filter(o => o.cinemaId === user.cinemaId);
+      orders = orders.filter(o => o.cinema_id === user.cinemaId);
       if (this.filterByMovieTitle() !== 'all') {
         orders = orders.filter(o => o.movieTitle === this.filterByMovieTitle());
       }
     } else {
-      orders = orders.filter(o => o.userId === user.id);
+      orders = orders.filter(o => o.user_id === user.id);
     }
-
-    // Ordena do mais recente para o mais antigo
+    
     return orders.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
-  });
-
-  // Extrai uma lista única de filmes dos pedidos para o filtro do admin
-  movieTitlesInOrders = computed(() => {
-    const adminCinemaId = this.currentUser()?.cinemaId;
-    const titles = this.allOrders()
-      .filter(o => o.cinemaId === adminCinemaId)
-      .map(o => o.movieTitle);
-    return [...new Set(titles)];
   });
   
   expandedOrderId = signal<string | null>(null);
+
+  constructor() {
+    if (this.allCinemas().length === 0) {
+      this.cinemaService.loadSessionsByMovie(1); 
+    }
+  }
 
   toggleOrderDetails(orderId: string): void {
     this.expandedOrderId.update(currentId => (currentId === orderId ? null : orderId));
@@ -79,7 +85,6 @@ export class OrderHistoryComponent {
     return items.reduce((acc, item) => acc + item.quantity, 0);
   }
 
-  // NOVO: Método para formatar os lugares
   getSeatsText(seats: Seat[]): string {
     return seats.map(s => s.id).join(', ');
   }

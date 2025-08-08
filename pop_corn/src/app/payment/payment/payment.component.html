@@ -32,7 +32,7 @@
     </div>
 
     <div class="cpf-section" *ngIf="paymentMethod() === 'PIX'">
-      <h3>CPF na nota?</h3>
+      <h3>CPF</h3>
       <input type="text" placeholder="Digite seu CPF (apenas números)" 
              [value]="cpf()"
              (input)="onCpfInput($event)" 

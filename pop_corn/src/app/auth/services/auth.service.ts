@@ -1,4 +1,3 @@
-// src/app/auth/services/auth.service.ts
 
 import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -21,7 +20,7 @@ export class AuthService implements AbstractAuthService {
   private apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
   private router = inject(Router);
-  private platformId = inject(PLATFORM_ID); // Inject PLATFORM_ID
+  private platformId = inject(PLATFORM_ID);
 
   currentUser = signal<User | null>(null);
   isAuthenticated = computed(() => !!this.currentUser());
@@ -40,7 +39,6 @@ export class AuthService implements AbstractAuthService {
     }
   }
 
-  // --- MÉTODO ADICIONADO ---
   loadAllUsers(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.http.get<User[]>(`${this.apiUrl}/users`).subscribe(users => {
@@ -48,7 +46,6 @@ export class AuthService implements AbstractAuthService {
       });
     }
   }
-  // -------------------------
 
   getToken(): string | null {
     if (isPlatformBrowser(this.platformId)) {
@@ -115,16 +112,26 @@ export class AuthService implements AbstractAuthService {
   }
 
   updateUser(user: User): Observable<OperationResult> {
-    return this.http.put<OperationResult>(`${this.apiUrl}/users/${user.id}`, user).pipe(
-      tap(() => {
-        if (this.currentUser()?.id === user.id) {
-          this.currentUser.set(user);
+    // A API retorna um objeto User, mas o serviço espera um OperationResult.
+    return this.http.put<User>(`${this.apiUrl}/users/${user.id}`, user).pipe(
+      // --- CORREÇÃO AQUI ---
+      tap(updatedUser => {
+        // Atualiza o estado local ANTES de transformar a resposta
+        if (this.currentUser()?.id === updatedUser.id) {
+          this.currentUser.set(updatedUser);
           if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('popcorn_user', JSON.stringify(user));
+            localStorage.setItem('popcorn_user', JSON.stringify(updatedUser));
           }
         }
-        this.allUsers.update(users => users.map(u => u.id === user.id ? user : u));
+        this.allUsers.update(users => users.map(u => u.id === updatedUser.id ? updatedUser : u));
+      }),
+      // Transforma a resposta da API (User) no formato esperado (OperationResult)
+      map(updatedUser => ({ success: true, data: updatedUser })),
+      catchError(error => {
+        console.error("Erro ao atualizar usuário:", error);
+        return of({ success: false, data: error });
       })
+      // ---------------------
     );
   }
 }

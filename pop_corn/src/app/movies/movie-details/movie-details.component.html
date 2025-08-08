@@ -4,7 +4,8 @@
     </button>
 
     <div class="movie-header">
-        <img [src]="'/' + movie.image" alt="{{ movie.title }}" class="poster">
+        <!-- CORREÇÃO AQUI: Removido o '/' do início do [src] -->
+        <img [src]="movie.image" alt="{{ movie.title }}" class="poster">
         <div class="movie-info">
 
         <h1>{{ movie.title }}</h1>
