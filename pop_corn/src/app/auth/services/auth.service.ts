@@ -1,15 +1,15 @@
+// src/app/auth/services/auth.service.ts
 
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../models/user.model';
 import { AbstractAuthService } from './abstract-auth.service';
 import { environment } from '../../../environment/environment';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, of, map, catchError, throwError } from 'rxjs';
 import { OperationResult } from '../../models/operation-result.model';
-import { of } from 'rxjs';
 
-// O tipo de resposta que a sua API de login devolve
 interface LoginResponse {
   access_token: string;
   token_type: string;
@@ -18,9 +18,10 @@ interface LoginResponse {
 
 @Injectable()
 export class AuthService implements AbstractAuthService {
-  private apiUrl = `${environment.apiUrl}/api`;
+  private apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID); // Inject PLATFORM_ID
 
   currentUser = signal<User | null>(null);
   isAuthenticated = computed(() => !!this.currentUser());
@@ -29,58 +30,100 @@ export class AuthService implements AbstractAuthService {
   allUsers = signal<User[]>([]);
 
   constructor() {
-    const userJson = localStorage.getItem('popcorn_user');
-    if (userJson) {
-      this.currentUser.set(JSON.parse(userJson));
+    if (isPlatformBrowser(this.platformId)) {
+      const userJson = localStorage.getItem('popcorn_user');
+      if (userJson) {
+        this.currentUser.set(JSON.parse(userJson));
+      }
+    } else {
+      this.currentUser.set(null);
     }
   }
 
+  // --- MÉTODO ADICIONADO ---
+  loadAllUsers(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.http.get<User[]>(`${this.apiUrl}/users`).subscribe(users => {
+        this.allUsers.set(users);
+      });
+    }
+  }
+  // -------------------------
+
   getToken(): string | null {
-    return localStorage.getItem('popcorn_token');
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('popcorn_token');
+    }
+    return null;
   }
 
   login(email: string, password: string): void {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     const body = new URLSearchParams();
-    body.set('username', email); // A API espera 'username'
+    body.set('username', email);
     body.set('password', password);
 
     this.http.post<LoginResponse>(`${this.apiUrl}/auth/token`, body.toString(), { headers })
-      .subscribe(response => {
-        // Guarda o token e os dados do utilizador
-        localStorage.setItem('popcorn_token', response.access_token);
-        localStorage.setItem('popcorn_user', JSON.stringify(response.user));
-        this.currentUser.set(response.user);
-        this.router.navigate(['/']);
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          const errorMessage = error.error?.detail || 'Erro desconhecido no login.';
+          alert(`Falha no login: ${errorMessage}`);
+          console.error("Detalhes do erro de login:", error);
+          return throwError(() => new Error(errorMessage));
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('popcorn_token', response.access_token);
+            localStorage.setItem('popcorn_user', JSON.stringify(response.user));
+          }
+          this.currentUser.set(response.user);
+          this.router.navigate(['/']);
+        }
       });
   }
 
   logout(): void {
-    localStorage.removeItem('popcorn_token');
-    localStorage.removeItem('popcorn_user');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('popcorn_token');
+      localStorage.removeItem('popcorn_user');
+    }
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
 
   addUser(userData: Omit<User, 'id'>): Observable<OperationResult<User>> {
-    return this.http.post<OperationResult<User>>(`${this.apiUrl}/users`, userData);
+    const userToCreate = { ...userData, password: userData.password || '' };
+    return this.http.post<User>(`${this.apiUrl}/users`, userToCreate).pipe(
+      map(createdUser => {
+        this.allUsers.update(users => [...users, createdUser]);
+        return { success: true, data: createdUser };
+      }),
+      catchError((error: HttpErrorResponse) => {
+        const errorMessage = error.error?.detail || 'Não foi possível criar o usuário.';
+        alert(`Falha no cadastro: ${errorMessage}`);
+        console.error("Detalhes do erro de cadastro:", error);
+        return of({ success: false, data: error });
+      })
+    );
   }
 
   forgotPassword(email: string): Observable<OperationResult> {
-    // Numa aplicação real, faria uma chamada POST para a sua API
-    console.log(`[REAL] A enviar pedido de recuperação para a API para o email: ${email}`);
-    // return this.http.post<OperationResult>(`${this.apiUrl}/forgot-password`, { email });
-    return of({ success: true }); // Simula o sucesso por agora
+    console.log(`[FRONTEND] Pedido de recuperação de senha para o email: ${email}`);
+    return of({ success: true });
   }
 
-    updateUser(user: User): Observable<OperationResult> {
-    // Lógica real: fazer uma chamada PUT para a API
-    return this.http.put<OperationResult>(`${environment.apiUrl}/users/${user.id}`, user).pipe(
+  updateUser(user: User): Observable<OperationResult> {
+    return this.http.put<OperationResult>(`${this.apiUrl}/users/${user.id}`, user).pipe(
       tap(() => {
-        // Atualiza o utilizador atual se for o que foi editado
         if (this.currentUser()?.id === user.id) {
           this.currentUser.set(user);
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('popcorn_user', JSON.stringify(user));
+          }
         }
+        this.allUsers.update(users => users.map(u => u.id === user.id ? user : u));
       })
     );
   }

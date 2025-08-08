@@ -8,28 +8,27 @@ import { Seat } from '../../cinemas/models/seat.model';
 import { Order as TicketOrder } from '../../booking/models/ticket.model';
 import { BomboniereOrder, BomboniereProduct } from '../../bomboniere/models/bomboniere.model';
 import { AbstractAuthService } from '../../auth/services/abstract-auth.service';
+import { Observable, of } from 'rxjs'; // Importar Observable e of
+import { OperationResult } from '../../models/operation-result.model';
 
 @Injectable()
-export class MockOrderService implements AbstractOrderService {
+export class MockOrderService extends AbstractOrderService {
   private platformId = inject(PLATFORM_ID);
-  private authService = inject(AbstractAuthService); // Injetar
+  private authService = inject(AbstractAuthService);
   private readonly STORAGE_KEY = 'popCornOrders';
 
-  // Estado do Pedido Ativo
   activeOrderContext = signal<{ movie: Movie; session: Session; cinemaName: string; cinemaId: number; } | null>(null);
   selectedSeats = signal<Seat[]>([]);
   ticketOrder = signal<TicketOrder[]>([]);
   bomboniereOrder = signal<BomboniereOrder[]>([]);
-
-  // Pedidos Finalizados
   completedOrders = signal<FinalizedOrder[]>([]);
 
-  // Sinais Computados
   totalTicketPrice = computed(() => this.ticketOrder().reduce((acc, item) => acc + (item.quantity * item.ticketType.price), 0));
   totalBombonierePrice = computed(() => this.bomboniereOrder().reduce((acc, item) => acc + (item.quantity * item.product.price), 0));
   totalPrice = computed(() => this.totalTicketPrice() + this.totalBombonierePrice());
 
   constructor() {
+    super();
     if (isPlatformBrowser(this.platformId)) {
       this.completedOrders.set(this.loadOrdersFromStorage());
       effect(() => this.saveOrdersToStorage(this.completedOrders()));
@@ -61,13 +60,15 @@ export class MockOrderService implements AbstractOrderService {
     });
   }
 
-  
-  finalizeOrder(cpf: string): FinalizedOrder {
+  // --- CORREÇÃO AQUI ---
+  // O método agora retorna um Observable com o resultado da operação.
+  finalizeOrder(cpf: string): Observable<OperationResult<FinalizedOrder>> {
     const context = this.activeOrderContext();
     const currentUser = this.authService.currentUser();
 
     if (!context || !currentUser) {
-      throw new Error("Contexto do pedido ou utilizador não encontrado para finalização.");
+      const error = { success: false, data: "Contexto do pedido ou utilizador não encontrado." };
+      return of(error as OperationResult<FinalizedOrder>);
     }
 
     const newFinalizedOrder: FinalizedOrder = {
@@ -76,11 +77,8 @@ export class MockOrderService implements AbstractOrderService {
       status: 'Aguardando Pagamento',
       cpf,
       totalPrice: this.totalPrice(),
-      
-      // ===== DADOS DE ASSOCIAÇÃO ADICIONADOS =====
       userId: currentUser.id,
-      cinemaId: context.cinemaId,  // Assumindo que o ID da sessão pode identificar o cinema
-
+      cinemaId: context.cinemaId,
       movieTitle: context.movie.title,
       movieImage: context.movie.image,
       cinemaName: context.cinemaName,
@@ -94,8 +92,9 @@ export class MockOrderService implements AbstractOrderService {
 
     this.completedOrders.update(orders => [...orders, newFinalizedOrder]);
     this.resetActiveOrder();
-    return newFinalizedOrder;
+    return of({ success: true, data: newFinalizedOrder });
   }
+  // ---------------------
 
   cancelOrder(orderId: string): void {
     this.completedOrders.update(orders =>

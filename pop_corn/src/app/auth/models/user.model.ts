@@ -5,6 +5,5 @@ export interface User {
   password?: string;
   role: 'USER' | 'ADMIN' | 'MASTER';
   avatarUrl: string; 
-  cinemaId?: number; // ID do cinema que o ADMIN gere
-
+  cinemaId?: number | null; 
 }

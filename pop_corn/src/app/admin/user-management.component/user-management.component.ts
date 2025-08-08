@@ -14,7 +14,7 @@ import { Cinema } from '../../cinemas/models/cinema.model';
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent {
-  private authService = inject(AbstractAuthService);
+  authService = inject(AbstractAuthService);
   private cinemaService = inject(AbstractCinemaService);
 
   allUsers = this.authService.allUsers;
@@ -33,21 +33,26 @@ export class UserManagementComponent {
   };
 
   constructor() {
-    // Garante que a lista de cinemas está disponível no serviço
+    this.authService.loadAllUsers();
     if (this.allCinemas().length === 0) {
-      this.cinemaService.loadSessionsByMovie(1); // Carrega a lista base de cinemas
+      this.cinemaService.loadSessionsByMovie(1);
     }
   }
 
   onCinemaChange(adminUser: User, event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
-    const cinemaId = selectElement.value === 'none' ? undefined : +selectElement.value;
+    // --- CORREÇÃO AQUI ---
+    // Trocamos 'undefined' por 'null' para garantir que o valor seja enviado para a API
+    const cinemaId = selectElement.value === 'none' ? null : +selectElement.value;
+    // ---------------------
     
     const updatedUser = { ...adminUser, cinemaId };
 
     this.authService.updateUser(updatedUser).subscribe(result => {
       if (result.success) {
         console.log(`Cinema do admin ${adminUser.name} atualizado.`);
+      } else {
+        console.error("Falha ao atualizar o cinema do admin.");
       }
     });
   }

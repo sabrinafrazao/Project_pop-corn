@@ -10,6 +10,7 @@ export abstract class AbstractAuthService {
   abstract isMaster: Signal<boolean>;
 
   abstract allUsers: Signal<User[]>;
+  abstract loadAllUsers(): void; // <-- MÉTODO ADICIONADO
   abstract updateUser(user: User): Observable<OperationResult>;
   abstract addUser(userData: Omit<User, 'id'>): Observable<OperationResult<User>>;
   

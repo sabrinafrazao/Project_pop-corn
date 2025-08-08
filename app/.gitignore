@@ -1,0 +1,16 @@
+    # Ambiente Virtual
+    venv/
+
+    # Ficheiros de Cache do Python
+    __pycache__/
+    *.pyc
+    *.pyo
+    *.pyd
+
+    # Base de Dados SQLite
+    db/popcorn.db
+
+    # Ficheiros de IDE
+    .vscode/
+    .idea/
+    

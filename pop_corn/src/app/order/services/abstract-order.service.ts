@@ -1,4 +1,3 @@
-// src/app/order/services/abstract-order.service.ts
 import { Signal } from '@angular/core';
 import { Seat } from '../../cinemas/models/seat.model';
 import { Order as TicketOrder } from '../../booking/models/ticket.model';
@@ -6,6 +5,8 @@ import { BomboniereOrder, BomboniereProduct } from '../../bomboniere/models/bomb
 import { FinalizedOrder } from '../models/finalized-order.model';
 import { Movie } from '../../movies/models/movies.model';
 import { Session } from '../../cinemas/models/session.model';
+import { Observable } from 'rxjs';
+import { OperationResult } from '../../models/operation-result.model';
 
 export abstract class AbstractOrderService {
   // Estado do Pedido Ativo
@@ -22,6 +23,6 @@ export abstract class AbstractOrderService {
   abstract setOrderContext(movie: Movie, session: Session, cinemaName: string, cinemaId: number): void;
   abstract setTickets(seats: Seat[], tickets: TicketOrder[]): void;
   abstract updateBomboniereOrder(productId: number, quantity: number, product: BomboniereProduct): void;
-  abstract finalizeOrder(cpf: string): FinalizedOrder;
+  abstract finalizeOrder(cpf: string): Observable<OperationResult<FinalizedOrder>>;
   abstract cancelOrder(orderId: string): void;
 }

@@ -6,5 +6,5 @@ import { BomboniereService } from './bomboniere.service';
 
 export const BomboniereProvider: Provider = {
   provide: AbstractBomboniereService,
-  useClass: environment.production ? BomboniereService : MockBomboniereService
+  useClass: environment.useMockService ? MockBomboniereService : BomboniereService
 };

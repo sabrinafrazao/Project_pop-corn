@@ -6,7 +6,6 @@ import { AbstractAuthService } from './abstract-auth.service';
 import { of, Observable } from 'rxjs';
 import { OperationResult } from '../../models/operation-result.model';
 
-// ===== 1. CONSTANTES DOS USUÁRIOS DE TESTE =====
 const DEV_USER: User = { id: '101', name: 'Usuário Padrão', email: 'user@test.com', role: 'USER', avatarUrl: 'https://placehold.co/100x100/FFFFFF/000000?text=U' };
 const DEV_ADMIN: User = { id: '998', name: 'Dev Admin', email: 'admin@dev.com', role: 'ADMIN', avatarUrl: 'https://placehold.co/100x100/4A5568/FFFFFF?text=A', cinemaId: 1 };
 const DEV_ADMIN_2: User = { id: '997', name: 'Admin Sem Cinema', email: 'admin2@dev.com', role: 'ADMIN', avatarUrl: 'https://placehold.co/100x100/4A5568/FFFFFF?text=A' };
@@ -27,25 +26,26 @@ export class MockAuthService extends AbstractAuthService {
   override isMaster = computed(() => this.currentUser()?.role === 'MASTER');
 
   constructor(private router: Router) {
-    super(); // CORREÇÃO: Adiciona a chamada `super()` que faltava
+    super();
     if (isPlatformBrowser(this.platformId)) {
       const userJson = localStorage.getItem('popcorn_user');
       if (userJson) {
         this.currentUser.set(JSON.parse(userJson));
       } else {
-        // ===== PONTO DE TROCA (como você prefere) =====
         const defaultUser = DEV_MASTER;
-        // ===============================================
         localStorage.setItem('popcorn_user', JSON.stringify(defaultUser));
         this.currentUser.set(defaultUser);
       }
+    } else {
+      // ADICIONADO: Define explicitamente o usuário como nulo no servidor
+      this.currentUser.set(null);
     }
   }
 
   override addUser(userData: Omit<User, 'id'>): Observable<OperationResult<User>> {
     const newUser: User = {
       ...userData,
-      id: `user-${Date.now()}` // Cria um ID único
+      id: `user-${Date.now()}`
     };
     this._users.update(users => [...users, newUser]);
     console.log("Novo utilizador adicionado:", newUser);
@@ -59,8 +59,10 @@ export class MockAuthService extends AbstractAuthService {
     
     if (this.currentUser()?.id === updatedUser.id) {
         const userWithPasswordRemoved = { ...updatedUser };
-        delete userWithPasswordRemoved.password; // Remove a senha antes de guardar
-        localStorage.setItem('popcorn_user', JSON.stringify(userWithPasswordRemoved));
+        delete userWithPasswordRemoved.password;
+        if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('popcorn_user', JSON.stringify(userWithPasswordRemoved));
+        }
         this.currentUser.set(userWithPasswordRemoved);
     }
     
@@ -96,14 +98,19 @@ export class MockAuthService extends AbstractAuthService {
   }
  
   override getToken(): string | null{
-  return null
+    if (isPlatformBrowser(this.platformId)) {
+        return localStorage.getItem('popcorn_token');
+    }
+    return null;
   }
 
   override forgotPassword(email: string): Observable<OperationResult> {
     console.log(`[MOCK] Pedido de recuperação de senha para o email: ${email}`);
-    // Numa aplicação real, a API verificaria se o email existe e enviaria o link.
-    // Aqui, apenas simulamos o sucesso da operação.
     return of({ success: true });
   }
 
+  override loadAllUsers(): void {
+    // No mock, não precisamos fazer nada, pois os utilizadores já estão na memória.
+    console.log('[MOCK] loadAllUsers chamado.');
+  }
 }
