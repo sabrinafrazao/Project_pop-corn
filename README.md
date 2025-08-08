@@ -287,7 +287,6 @@ Nesta semana, a integrante **Sabrina** se desligou oficialmente do projeto. Com 
 
 ---
 
-Se precisar de mais algum ajuste ou adição ao modelo, me avise!
 
 
 ### 👥 Equipe
